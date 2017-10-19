@@ -2,19 +2,8 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
-
-// Validate Function to check e-mail length
-let emailLengthChecker = (email) => {
-  if (!email) {
-    return false;
-  } else {
-    if (email.length < 5 || email.length > 30) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-};
+const config = require('../config/database');
+const jwt = require('jsonwebtoken');
 
 // Validate Function to check if valid e-mail format
 let validEmailChecker = (email) => {
@@ -29,82 +18,8 @@ let validEmailChecker = (email) => {
 // Email Validators
 const emailValidators = [
   {
-    validator: emailLengthChecker,
-    message: 'E-mail must be at least 5 characters but no more than 30'
-  },
-  {
     validator: validEmailChecker,
-    message: 'Must be a valid e-mail'
-  }
-];
-
-// Validate Function to check username length
-let usernameLengthChecker = (username) => {
-  if (!username) {
-    return false;
-  } else {
-    if (username.length < 3 || username.length > 15) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-};
-
-// Validate Function to check if valid username format
-let validUsername = (username) => {
-  if (!username) {
-    return false;
-  } else {
-    const regExp = new RegExp(/^[a-zA-Z0-9]+$/);
-    return regExp.test(username);
-  }
-};
-
-// name validators
-const usernameValidators = [
-  {
-    validator: usernameLengthChecker,
-    message: 'Username must be at least 3 characters but no more than 15'
-  },
-  {
-    validator: validUsername,
-    message: 'Username must not have any special characters'
-  }
-];
-
-// Validate Function to check password length
-let passwordLengthChecker = (password) => {
-  if (!password) {
-    return false;
-  } else {
-    if (password.length < 8 || password.length > 35) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-};
-
-// Validate Function to check if valid password format
-let validPassword = (password) => {
-  if (!password) {
-    return false;
-  } else {
-    const regExp = new RegExp(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\d])(?=.*?[\W]).{8,35}$/);
-    return regExp.test(password);
-  }
-};
-
-// Password validators
-const passwordValidators = [
-  {
-    validator: passwordLengthChecker,
-    message: 'Password must be at least 8 characters but no more than 35'
-  },
-  {
-    validator: validPassword,
-    message: 'Must have at least one uppercase, lowercase, special character, and number'
+    message: 'Email invalide'
   }
 ];
 
@@ -113,24 +28,35 @@ const userSchema = new Schema({
   nom: {
     type: String,
     required: true,
-    validate: usernameValidators
+    minlength: 1,
+    maxlength: 100
   },
   prenom: {
     type: String,
     required: true,
-    validate: usernameValidators
+    minlength: 1,
+    maxlength: 100
   },
   password: {
     type: String,
     required: true,
-    validate: passwordValidators
+    minlength: 6,
+    maxlength: 150
   },
   email: {
     type: String,
     required: true,
     unique: true,
     lowercase: true,
-    validate: emailValidators
+    validate: emailValidators,
+    minlength: 6,
+    maxlength: 100
+  },
+  numTel: {
+    type: Number,
+    required: true,
+    minlength: 10,
+    maxlength: 10
   }
 });
 
@@ -149,6 +75,16 @@ userSchema.pre('save', function (next) {
 // Compare password with encryted password in database
 userSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
+};
+
+userSchema.methods.generateToken = function (_id) {
+  var expiry = new Date();
+  expiry.setDate(expiry.getDate() + 7);
+
+  return jwt.sign({
+    _id: _id,
+    exp: parseInt(expiry.getTime() / 1000),
+  }, config.secret);
 };
 
 module.exports = mongoose.model('User', userSchema);

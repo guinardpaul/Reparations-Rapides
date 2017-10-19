@@ -7,6 +7,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 
 // Components
 import { AppComponent } from './app.component';
+import { NavbarComponent } from './routing/navbar/navbar.component';
 
 // Services
 import { AuthenticationService } from './authentication/services/authentication.service';
@@ -17,14 +18,17 @@ import { CompteComponent } from './compte/compte.component';
   declarations: [
     AppComponent,
     AboutComponent,
-    CompteComponent
+    CompteComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
     RoutingModule,
     AuthenticationModule
   ],
-  providers: [],
+  providers: [
+    AuthenticationService
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

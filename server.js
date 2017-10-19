@@ -7,6 +7,10 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const favicon = require('serve-favicon');
+const passport = require('passport');
+const session = require('express-session');
+require('./app/config/passport');
+
 const config = require('./app/config/database');
 const port = process.env.PORT || 3000;
 
@@ -34,6 +38,11 @@ app.use(cors({ origin: 'http://localhost:4200' }));
 // body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(session({ secret: config.secret }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Set Static Folder
 app.use(express.static(path.join(__dirname, '/public')));
