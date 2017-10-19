@@ -7,13 +7,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const favicon = require('serve-favicon');
-const config = require('./config/database');
+const config = require('./app/config/database');
 const port = process.env.PORT || 3000;
 
 const auth = require('./app/routes/authentication')(router);
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.uri, { useMongopublic: true }, (err) => {
+mongoose.connect(config.uri, { useMongoClient: true }, (err) => {
   if (err) {
     console.log('Erreur trying to connect to database' + err);
   } else {

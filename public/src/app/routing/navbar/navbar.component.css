@@ -1,0 +1,11 @@
+.cursor {
+  cursor: pointer;
+}
+
+.marge-searchBar {
+  margin-top: 10px;
+}
+
+.marge-collapsed {
+  margin-left: 2px;
+}
