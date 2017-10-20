@@ -23,9 +23,9 @@ module.exports = (router) => {
     smtpTransport.sendMail(mailOptions, function (err, mail) {
       if (err) {
         console.log(err);
-        res.json(err);
+        res.status(500).json(err);
       } else {
-        res.json({
+        res.status(200).json({
           success: true,
           message: 'Email envoyer',
           obj: mail
