@@ -53,7 +53,7 @@ const userSchema = new Schema({
     maxlength: 100
   },
   numTel: {
-    type: String,
+    type: Number,
     required: true,
     minlength: 10,
     maxlength: 10
@@ -77,6 +77,7 @@ userSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
+// Generate Json Web Token
 userSchema.methods.generateToken = function (_id) {
   var expiry = new Date();
   expiry.setDate(expiry.getDate() + 7);

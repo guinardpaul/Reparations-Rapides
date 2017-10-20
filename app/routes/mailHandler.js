@@ -3,7 +3,9 @@ const nodemailer = require('nodemailer');
 module.exports = (router) => {
 
   var smtpTransport = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com", // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
     auth: {
       user: "guinardpaul@gmail.com",
       pass: "bidasse12"
@@ -12,19 +14,22 @@ module.exports = (router) => {
 
   router.post('/sendMail', function (req, res) {
     var mailOptions = {
-      from: 'guinardpaul@gmail.com',
+      from: 'Paul Guinard <guinardpaul@gmail.com>',
       to: req.body.to,
       subject: req.body.subject,
       text: req.body.text
     }
     console.log(mailOptions);
-    smtpTransport.sendMail(mailOptions, function (error, response) {
-      if (error) {
-        console.log(error);
-        res.end("error");
+    smtpTransport.sendMail(mailOptions, function (err, mail) {
+      if (err) {
+        console.log(err);
+        res.json(err);
       } else {
-        console.log("Message sent: " + response.message);
-        res.end("sent");
+        res.json({
+          success: true,
+          message: 'Email envoyer',
+          obj: mail
+        })
       }
     });
   });

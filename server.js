@@ -17,7 +17,7 @@ const config = require('./app/config/database');
 const port = process.env.PORT || 3000;
 
 const auth = require('./app/routes/authentication')(router, passport);
-const mailHandler = require('./app/routes/mailHandler')(router, nodemailer);
+const mailHandler = require('./app/routes/mailHandler')(router);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.uri, { useMongoClient: true }, (err) => {
