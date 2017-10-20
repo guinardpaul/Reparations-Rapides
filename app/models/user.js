@@ -53,7 +53,7 @@ const userSchema = new Schema({
     maxlength: 100
   },
   numTel: {
-    type: Number,
+    type: String,
     required: true,
     minlength: 10,
     maxlength: 10
