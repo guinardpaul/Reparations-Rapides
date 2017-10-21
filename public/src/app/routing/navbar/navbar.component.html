@@ -17,24 +17,24 @@
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="about">A propos</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" *ngIf="_authService.loggedIn()" routerLinkActive="active">
           <a class="nav-link" routerLink="compte">Compte</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" *ngIf="!_authService.loggedIn()" routerLinkActive="active">
           <a class="nav-link" routerLink="login">Login</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <li class="nav-item" *ngIf="!_authService.loggedIn()" routerLinkActive="active">
           <a class="nav-link" routerLink="register">Register</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="_authService.loggedIn()">
           <a class="nav-link cursor" (click)="onLogout()">Logout</a>
         </li>
-        <li>
+        <!-- <li>
           <form class="form-inline marge-searchBar">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
-        </li>
+        </li> -->
       </ul>
 
     </div>

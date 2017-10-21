@@ -83,7 +83,7 @@ userSchema.methods.generateToken = function (_id) {
   expiry.setDate(expiry.getDate() + 7);
 
   return jwt.sign({
-    _id: _id,
+    userId: _id,
     exp: parseInt(expiry.getTime() / 1000),
   }, config.secret);
 };

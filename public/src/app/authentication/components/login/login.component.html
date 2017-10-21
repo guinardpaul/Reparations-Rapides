@@ -1,4 +1,4 @@
-<h2>Login</h2>
+<!-- <h2 class="page-header">Se connecter</h2>
 <form (submit)="onLogin()" [formGroup]="loginForm" class="form-horizontal">
   <div class="form-group">
     <label for="email">Email:</label>
@@ -8,5 +8,28 @@
     <label for="password">Mot de passe:</label>
     <input type="password" name="password" class="form-control" id="password" formControlName="password">
   </div>
-  <button type="submit" class="btn btn-primary">Se connecter</button>
-</form>
+  <button [disabled]="!loginForm.valid || processing" type="submit" class="btn btn-primary">Se connecter</button>
+</form> -->
+
+<div class="container">
+  <div class="card card-container">
+    <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
+    <h1 class="center">Connexion</h1>
+    <br>
+    <form (submit)="onLogin()" [formGroup]="loginForm" class="form-signin">
+      <span id="reauth-email" class="reauth-email"></span>
+      <input type="email" id="inputEmail" class="form-control" formControlName="email" placeholder="Adresse Email" required autofocus>
+      <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Mot de passe" required>
+      <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Se connecter</button>
+    </form>
+    <!-- /form -->
+    <a [routerLink]="['/register']" class="forgot-password">
+      Pas de compte ?
+    </a>
+    <a routerLink="/forgot-password" class="forgot-password">
+      Mot de passe oublié ?
+    </a>
+  </div>
+  <!-- /card-container -->
+</div>
+<!-- /container -->

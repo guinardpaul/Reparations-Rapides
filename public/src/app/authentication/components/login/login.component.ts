@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { User } from '../../../shared/models/User';
 
-// import { FlashMsgService } from '../../../shared/services/flash-msg.service';
+import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 import { AuthenticationService } from '../../services/authentication.service';
-
+import { AuthGuard } from '../../../routing/guards/auth.guard';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   user: User;
-  previousUrl;
+  processing: boolean;
+  previousUrl: string;
 
   get email(): string { return this.loginForm.get('email').value as string; }
   get password(): string { return this.loginForm.get('password').value as string; }
@@ -24,10 +25,13 @@ export class LoginComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthenticationService,
+    private _flashMsg: FlashMsgService,
+    private _authGuard: AuthGuard,
     private _router: Router
   ) {
     this.createForm();
     this.user = new User();
+    this.processing = false;
   }
 
   createForm() {
@@ -42,6 +46,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin() {
+    this.processing = true;
+
     this.user = {
       email: this.email,
       password: this.password
@@ -51,18 +57,33 @@ export class LoginComponent implements OnInit {
       .subscribe(data => {
         console.log('login...');
         console.log(data);
-        if (data.success) {
-          console.log(data.info);
-        } else {
-          console.log(data);
+        if (data.info.success) {
+          this._authService.storeUserData(data.token, data.info.obj);
+          this._flashMsg.displayMsg('Connexion avec succés', 'alert-success', 1500);
+          setTimeout(() => {
+            if (this.previousUrl) {
+              this._router.navigate([ this.previousUrl ]);
+            } else {
+              this._router.navigate([ '/' ]);
+            }
+          }, 1000);
         }
       }, err => {
-        console.log(err);
+        this.processing = false;
+        if (!err.ok) {
+          this._flashMsg.displayMsg('Email ou mot de passe invalide', 'alert-danger', 1500);
+        } else {
+          console.log(err);
+        }
       });
   }
 
   ngOnInit() {
-
+    if (this._authGuard.redirectURL) {
+      this._flashMsg.displayMsg('Vous devez être connecté pour accéder à cette page', 'alert-warning', 2000);
+      this.previousUrl = this._authGuard.redirectURL;
+      this._authGuard.redirectURL = undefined;
+    }
   }
 
 }

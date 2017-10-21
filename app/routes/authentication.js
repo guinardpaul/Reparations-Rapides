@@ -9,7 +9,7 @@ module.exports = (router, passport) => {
    * Vérification session user pour route profile
    * @returns isAuthenticated()
    */
-  function isLoggedIn(req, res, next) {
+  /* function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
@@ -18,7 +18,7 @@ module.exports = (router, passport) => {
       message: 'Vous devez être connecté pour accéder à cette page',
       redirect: '/login'
     });
-  };
+  }; */
 
   /**
    * Register User
@@ -91,55 +91,12 @@ module.exports = (router, passport) => {
         req.login(user, (err) => {
           if (err) return next(err);
           console.log(user);
-        })
+        });
       } else {
         // If user is not found
         res.status(401).json(info);
       }
     })(req, res, next);
-  });
-
-  /* router.use((req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token) {
-      res.status(401).json({
-        success: false,
-        message: 'token not provided'
-      });
-    } else {
-      jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-          res.status(401).json({
-            success: false,
-            message: 'token invalid'
-          });
-        } else {
-          req.decoded = decoded;
-          next();
-        }
-      });
-    }
-  }); */
-
-  router.get('/profile', isLoggedIn, (req, res, next) => {
-    User.findById(req.decoded.userId).select('nom prenom email').exec((err, user) => {
-      if (err) {
-        res.status(500).json({
-          success: false,
-          message: err
-        });
-      } else if (!user) {
-        res.status(400).json({
-          success: false,
-          message: 'User not find'
-        });
-      } else {
-        res.status(200).json({
-          success: true,
-          obj: user
-        });
-      }
-    })
   });
 
   return (router);
