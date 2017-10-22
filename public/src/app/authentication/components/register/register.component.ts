@@ -14,15 +14,16 @@ import { User } from '../../../shared/models/User';
   styleUrls: [ './register.component.css' ]
 })
 export class RegisterComponent implements OnInit {
-  registerForm: FormGroup;
-  public get nom() { return this.registerForm.get('nom').value as string; }
-  public get prenom() { return this.registerForm.get('prenom').value as string; }
-  public get email() { return this.registerForm.get('email').value as string; }
-  public get passwords() { return this.registerForm.controls[ 'passwords' ] as FormControl; }
-  public get password() { return this.passwords.get('password').value as string; }
-  public get confirmPassword() { return this.passwords.get('confirmPassword').value as string; }
-  user: User;
-  processing: boolean;
+  private registerForm: FormGroup;
+  private get nom() { return this.registerForm.get('nom').value as string; }
+  private get prenom() { return this.registerForm.get('prenom').value as string; }
+  private get email() { return this.registerForm.get('email').value as string; }
+  private get numTel() { return this.registerForm.get('numTel').value as string; }
+  private get passwords() { return this.registerForm.controls[ 'passwords' ] as FormControl; }
+  private get password() { return this.passwords.get('password').value as string; }
+  private get confirmPassword() { return this.passwords.get('confirmPassword').value as string; }
+  private user: User;
+  private processing: boolean;
 
   constructor(
     private _fb: FormBuilder,
@@ -51,6 +52,11 @@ export class RegisterComponent implements OnInit {
         Validators.minLength(6),
         Validators.maxLength(100)
       ]) ],
+      numTel: [ '', Validators.compose([
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]) ],
       passwords: this._fb.group({
         password: [ '', Validators.compose([
           Validators.required,
@@ -73,6 +79,7 @@ export class RegisterComponent implements OnInit {
       nom: this.nom,
       prenom: this.prenom,
       email: this.email,
+      numTel: this.numTel,
       password: this.password
     };
 

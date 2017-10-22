@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { FlashMsgService } from '../../../shared/services/flash-msg.service';
+import { CompteService } from '../../../compte/compte.service';
 import { EmailService } from '../../../shared/services/email.service';
 import { Email } from '../../../shared/models/Email';
+import { User } from '../../../shared/models/User';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,15 +17,21 @@ export class ForgotPasswordComponent implements OnInit {
   requestSubmitted: boolean;
   emailUrl: string;
   adresseEmail: string;
+  processing: boolean;
+  user: User;
 
   get email(): string { return this.forgotPasswordForm.get('email').value as string; }
 
   constructor(
     private _emailService: EmailService,
+    private _compteService: CompteService,
+    private _flashMsg: FlashMsgService,
     private _fb: FormBuilder
   ) {
     this.requestSubmitted = false;
+    this.processing = false;
     this.createForm();
+    this.user = new User();
   }
 
   createForm() {
@@ -33,21 +42,46 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  forgotPassword() {
-    this.adresseEmail = this.email;
-    const mailBody = 'Salut de l\'appli';
-    const mail: Email = {
-      to: this.email,
-      subject: 'Mot de passe oublié ?',
-      text: mailBody
-    };
-    this._emailService.sendMail(mail)
-      .subscribe(
-      data => console.log(data),
-      err => console.log(err)
+  getUserInfos(email: string) {
+    this._compteService.getUserByEmail(email)
+      .subscribe(user => {
+        this.user = user.obj;
+      }, err => console.log(err)
       );
+  }
 
-    this.requestSubmitted = true;
+  forgotPassword() {
+    this.processing = true;
+    this.adresseEmail = this.email;
+    this.getUserInfos(this.email);
+
+    setTimeout(() => {
+      const mailBody = `
+      <h3>Bonjour ${this.user.nom} ${this.user.prenom}.</h3>
+      Cliquez sur le lien suivant pour réinitialiser votre mot de passe : <br/>
+      <a href="http://localhost:4200/compte/init-password/${this.email}">Réinitialiser le mot de passe.</a>
+      `;
+      const mail: Email = {
+        to: this.adresseEmail,
+        subject: 'Mot de passe oublié ?',
+        text: mailBody
+      };
+
+      this._emailService.sendMail(mail)
+        .subscribe(
+        data => {
+          console.log(data);
+          this._flashMsg.displayMsg(`Message envoyé à ${this.adresseEmail}. Consulter votre boîte de réception`, 'alert-success', 1500);
+          this.requestSubmitted = true;
+        },
+        err => {
+          console.log(err);
+          this._flashMsg.displayMsg('Erreur durant l\'envoi, réessayer plus tard', 'alert-danger', 1500);
+          this.processing = false;
+        });
+    }, 1000);
+
+    this.processing = false;
   }
 
   ngOnInit() {

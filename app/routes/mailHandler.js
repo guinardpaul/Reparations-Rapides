@@ -17,7 +17,7 @@ module.exports = (router) => {
       from: 'Paul Guinard <guinardpaul@gmail.com>',
       to: req.body.to,
       subject: req.body.subject,
-      text: req.body.text
+      html: req.body.text
     }
     console.log(mailOptions);
     smtpTransport.sendMail(mailOptions, function (err, mail) {

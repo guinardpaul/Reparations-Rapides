@@ -4,6 +4,67 @@ const config = require('../../app/config/database');
 
 module.exports = (router) => {
 
+  router.get('/email/:email', (req, res, next) => {
+    if (!req.params.email) {
+      return res.status(409).json({
+        success: false,
+        message: 'email not provided'
+      });
+    } else {
+      User.findOne({ email: req.params.email }).select('nom prenom').exec((err, user) => {
+        if (err) return next(err);
+        if (!user) {
+          res.status(409).json({
+            success: false,
+            message: 'user not find'
+          });
+        } else {
+          return res.status(200).json({
+            success: true,
+            obj: user
+          });
+        }
+      });
+    }
+  });
+
+  router.put('/init-password/:_id', (req, res, next) => {
+    if (!req.body) {
+      res.status(409).json({
+        success: false,
+        message: 'body not provided'
+      });
+    } else if (!req.params._id) {
+      res.status(409).json({
+        success: false,
+        message: 'id not provided'
+      });
+    } else {
+      const newUser = {
+        nom: req.body.nom,
+        prenom: req.body.prenom,
+        numTel: req.body.numTel,
+        email: req.body.email,
+        password: req.body.password
+      };
+      User.update({ _id: req.params._id }, { password: req.body.password }, (err, user) => {
+        if (err) return next(err);
+        if (!user) {
+          res.status(409).json({
+            success: false,
+            message: 'user not find'
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            message: 'Mot de passe réinitialisé',
+            obj: user
+          });
+        }
+      });
+    }
+  });
+
   router.use((req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) {

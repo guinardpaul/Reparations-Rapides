@@ -30,6 +30,10 @@ export class CompteService {
     this.authToken = localStorage.getItem('token');
   }
 
+  getUserByEmail(email: string): Observable<any> {
+    return this._http.get(`${this.url}/email/${email}`);
+  }
+
   getProfile(): Observable<any> {
     this.createAuthHeaders();
     if (this.authToken !== undefined) {
