@@ -40,14 +40,15 @@ module.exports = (router) => {
         message: 'id not provided'
       });
     } else {
-      const newUser = {
+      const newUser = new User({
         nom: req.body.nom,
         prenom: req.body.prenom,
         numTel: req.body.numTel,
         email: req.body.email,
         password: req.body.password
-      };
-      User.update({ _id: req.params._id }, { password: req.body.password }, (err, user) => {
+      });
+      console.log(req.body);
+      newUser.update((err, user) => {
         if (err) return next(err);
         if (!user) {
           res.status(409).json({

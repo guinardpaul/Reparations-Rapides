@@ -74,9 +74,16 @@ userSchema.pre('save', function (next) {
 
 // Middleware to encrypt password on update User TODO: store correct hash password & try login after
 userSchema.pre('update', function (next) {
+  console.log(this);
+  if (!this.isModified('password'))
+    return next();
+
   bcrypt.hash(this.password, null, null, (err, hash) => {
     if (err) return next(err);
+    console.log(this.password);
     this.password = hash;
+    console.log(this.password);
+    this.update({}, { $set: { password: hash } });
     next();
   });
 });
