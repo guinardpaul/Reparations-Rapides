@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+// Services
 import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 import { CompteService } from '../../../compte/compte.service';
 import { EmailService } from '../../../shared/services/email.service';
+// Models
 import { Email } from '../../../shared/models/Email';
 import { User } from '../../../shared/models/User';
+// Templates
+import * as mailTemplate from '../../../shared/models/template-email';
 
 @Component({
   selector: 'app-forgot-password',
@@ -56,11 +59,7 @@ export class ForgotPasswordComponent implements OnInit {
     this.getUserInfos(this.email);
 
     setTimeout(() => {
-      const mailBody = `
-      <h3>Bonjour ${this.user.nom} ${this.user.prenom}.</h3>
-      Cliquez sur le lien suivant pour réinitialiser votre mot de passe : <br/>
-      <a href="http://localhost:4200/compte/init-password/${this.email}">Réinitialiser le mot de passe.</a>
-      `;
+      const mailBody = mailTemplate.forgotPassword(this.user);
       const mail: Email = {
         to: this.adresseEmail,
         subject: 'Mot de passe oublié ?',
@@ -71,17 +70,16 @@ export class ForgotPasswordComponent implements OnInit {
         .subscribe(
         data => {
           console.log(data);
-          this._flashMsg.displayMsg(`Message envoyé à ${this.adresseEmail}. Consulter votre boîte de réception`, 'alert-success', 1500);
           this.requestSubmitted = true;
+          this.processing = false;
         },
         err => {
           console.log(err);
-          this._flashMsg.displayMsg('Erreur durant l\'envoi, réessayer plus tard', 'alert-danger', 1500);
+          this._flashMsg.displayMsg('Erreur durant l\'envoi, réessayer plus tard', 'alert-danger', 3000);
           this.processing = false;
         });
     }, 1000);
 
-    this.processing = false;
   }
 
   ngOnInit() {

@@ -11,7 +11,7 @@ module.exports = (router) => {
         message: 'email not provided'
       });
     } else {
-      User.findOne({ email: req.params.email }).select('nom prenom').exec((err, user) => {
+      User.findOne({ email: req.params.email }).select('nom prenom email').exec((err, user) => {
         if (err) return next(err);
         if (!user) {
           res.status(409).json({

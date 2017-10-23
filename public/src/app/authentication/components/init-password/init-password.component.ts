@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
+// Models
 import { User } from '../../../shared/models/User';
+// Services
 import { CompteService } from '../../../compte/compte.service';
+import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 
 @Component({
   selector: 'app-init-password',
@@ -23,8 +25,10 @@ export class InitPasswordComponent implements OnInit {
 
   constructor(
     private _compteService: CompteService,
+    private _flashMsg: FlashMsgService,
     private _fb: FormBuilder,
-    private _activatedRoute: ActivatedRoute
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router
   ) {
     this.createForm();
     this.user = new User();
@@ -53,6 +57,7 @@ export class InitPasswordComponent implements OnInit {
   }
 
   initPassword() {
+    this.processing = false;
     const user: User = this.user;
     user.password = this.password;
 
@@ -74,7 +79,8 @@ export class InitPasswordComponent implements OnInit {
       this.initPasswordForm.get('email').setValue(this.userEmail);
       this.getUserInfos(this.userEmail);
     } else {
-      console.log('Email not provided');
+      this._flashMsg.displayMsg('Ce lien a expiré. Entrez votre adresse E-mail pour recevoir un lien valide.', 'alert-danger', 5000);
+      this._router.navigate([ '/forgot-password' ]);
     }
   }
 

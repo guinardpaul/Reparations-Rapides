@@ -15,6 +15,12 @@ export class NavbarComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * On Logout method:
+   * - clear token and user on localStorage
+   * - navigate HomePage
+   * @memberof NavbarComponent
+   */
   onLogout() {
     this._authService.clearLocalStorage();
     this._router.navigate([ '/home' ]);

@@ -6,11 +6,12 @@ import { User } from '../models/User';
 
 @Injectable()
 export class UserService {
-  url: string;
+  private url: string;
+
   constructor(
     private _http: HttpClient
   ) {
-    this.url = 'http://localhost:3000/users'
+    this.url = 'http://localhost:3000/users';
   }
 
   getProfileByEmail(email: string): Observable<any> {

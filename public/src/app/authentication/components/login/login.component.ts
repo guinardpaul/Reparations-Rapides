@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-
+// Models
 import { User } from '../../../shared/models/User';
-
+// Services
 import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 import { AuthenticationService } from '../../services/authentication.service';
+// Guards
 import { AuthGuard } from '../../../routing/guards/auth.guard';
 
 @Component({

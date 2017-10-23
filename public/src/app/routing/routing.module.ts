@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 // Components
 import { LoginComponent } from '../authentication/components/login/login.component';
 import { RegisterComponent } from '../authentication/components/register/register.component';
@@ -21,6 +20,7 @@ const appRoutes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'compte', component: CompteComponent, canActivate: [ AuthGuard ] },
   { path: 'compte/init-password/:email', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
+  { path: 'compte/init-password', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

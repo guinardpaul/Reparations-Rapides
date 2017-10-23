@@ -60,7 +60,7 @@ const userSchema = new Schema({
   }
 });
 
-// Middleware to encrypt password
+// Middleware to encrypt password on save User
 userSchema.pre('save', function (next) {
   if (!this.isModified('password'))
     return next();
@@ -72,6 +72,7 @@ userSchema.pre('save', function (next) {
   });
 });
 
+// Middleware to encrypt password on update User TODO: store correct hash password & try login after
 userSchema.pre('update', function (next) {
   bcrypt.hash(this.password, null, null, (err, hash) => {
     if (err) return next(err);
@@ -87,6 +88,7 @@ userSchema.methods.comparePassword = function (password) {
 
 // Generate Json Web Token
 userSchema.methods.generateToken = function (_id) {
+  // Set expiration date to date.now() + 7 days
   var expiry = new Date();
   expiry.setDate(expiry.getDate() + 7);
 
