@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 // Models
@@ -15,6 +15,8 @@ import { AuthGuard } from '../../../routing/guards/auth.guard';
   styleUrls: [ './login.component.css' ]
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('emailInput') emailInput: ElementRef;
+  @ViewChild('passwordInput') passwordInput: ElementRef;
   loginForm: FormGroup;
   user: User;
   processing: boolean;
@@ -28,7 +30,8 @@ export class LoginComponent implements OnInit {
     private _authService: AuthenticationService,
     private _flashMsg: FlashMsgService,
     private _authGuard: AuthGuard,
-    private _router: Router
+    private _router: Router,
+    private _renderer: Renderer
   ) {
     this.createForm();
     this.user = new User();
@@ -80,6 +83,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (localStorage.getItem('init-password')) {
+      this.loginForm.get('email').setValue(localStorage.getItem('init-password'));
+      this._renderer.invokeElementMethod(this.passwordInput.nativeElement, 'focus');
+      localStorage.clear();
+    }
+
+
     if (this._authGuard.redirectURL) {
       this._flashMsg.displayMsg('Vous devez être connecté pour accéder à cette page', 'alert-warning', 2000);
       this.previousUrl = this._authGuard.redirectURL;

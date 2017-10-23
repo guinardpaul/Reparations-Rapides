@@ -18,8 +18,10 @@
     <br>
     <form (submit)="onLogin()" [formGroup]="loginForm" class="form-signin">
       <span id="reauth-email" class="reauth-email"></span>
-      <input type="email" id="inputEmail" class="form-control" formControlName="email" placeholder="Adresse Email" required autofocus>
-      <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Mot de passe" required>
+      <input type="email" #emailInput id="inputEmail" class="form-control" formControlName="email" placeholder="Adresse Email"
+        required>
+      <input type="password" #passwordInput id="inputPassword" class="form-control" formControlName="password" placeholder="Mot de passe"
+        required>
       <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Se connecter</button>
     </form>
     <!-- /form -->

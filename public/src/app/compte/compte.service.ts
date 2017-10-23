@@ -41,4 +41,9 @@ export class CompteService {
     }
   }
 
+  initUserPassword(user: User): Observable<any> {
+    console.log(user);
+    return this._http.put(`${this.url}/init-password/${user._id}`, user);
+  }
+
 }

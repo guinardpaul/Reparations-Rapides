@@ -60,8 +60,22 @@ export class InitPasswordComponent implements OnInit {
     this.processing = false;
     const user: User = this.user;
     user.password = this.password;
+    console.log(user);
 
-
+    this._compteService.initUserPassword(user)
+      .subscribe(data => {
+        if (data.success) {
+          this._flashMsg.displayMsg('Mot de passe mis à jour. Vous pouvez vous connecter avec votre nouveau password.',
+            'alert-success', 3000);
+          setTimeout(() => {
+            localStorage.setItem('init-password', user.email);
+            this._router.navigate([ '/login' ]);
+          }, 1000);
+        } else {
+          this._flashMsg.displayMsg('Erreur durant la mise à jour du password. Veuillez réessayer.', 'alert-danger', 2000);
+        }
+      }, err => console.log(err)
+      );
   }
 
   getUserInfos(email: string) {

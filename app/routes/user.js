@@ -29,10 +29,10 @@ module.exports = (router) => {
     });
 
     router.put('/init-password/:_id', (req, res, next) => {
-        if (!req.body) {
+        if (!req.body.password) {
             res.status(409).json({
                 success: false,
-                message: 'body not provided'
+                message: 'password not provided'
             });
         } else if (!req.params._id) {
             res.status(409).json({
@@ -40,7 +40,7 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            User.update(req.params.id, { password: req.body.password }, { new: true }, (err, user) => {
+            User.findById(req.params._id, (err, user) => {
                 if (err) return next(err);
                 if (!user) {
                     res.status(409).json({
@@ -48,14 +48,20 @@ module.exports = (router) => {
                         message: 'user not find'
                     });
                 } else {
-                    res.status(200).json({
-                        success: true,
-                        message: 'Mot de passe réinitialisé',
-                        obj: {
-                            nom: user.nom,
-                            prenom: user.prenom,
-                            email: user.email,
-                            numTel: user.numTel
+                    console.log(req.body.password);
+                    User.update({ _id: req.params._id }, { password: req.body.password }, (err, raw) => {
+                        if (err) return next(err);
+                        if (!raw) {
+                            res.status(409).json({
+                                success: false,
+                                message: 'user not find'
+                            });
+                        } else {
+                            res.status(200).json({
+                                success: true,
+                                message: 'Mot de passe réinitialisé',
+                                obj: raw
+                            });
                         }
                     });
                 }

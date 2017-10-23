@@ -8,6 +8,7 @@ import { CompteComponent } from '../compte/components/compte.component';
 import { MainPageComponent } from '../main-page/main-page.component';
 import { ForgotPasswordComponent } from '../authentication/components/forgot-password/forgot-password.component';
 import { InitPasswordComponent } from '../authentication/components/init-password/init-password.component';
+import { ValidateAccountComponent } from '../authentication/components/validate-account/validate-account.component';
 // Guards
 import { AuthGuard } from './guards/auth.guard';
 import { NotAuthGuard } from './guards/not-auth.guard';
@@ -21,6 +22,7 @@ const appRoutes: Routes = [
   { path: 'compte', component: CompteComponent, canActivate: [ AuthGuard ] },
   { path: 'compte/init-password/:email', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'compte/init-password', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
+  { path: 'compte-valide', component: ValidateAccountComponent, canActivate: [ NotAuthGuard ] },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
