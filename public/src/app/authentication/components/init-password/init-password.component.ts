@@ -17,6 +17,7 @@ export class InitPasswordComponent implements OnInit {
   processing: boolean;
   user: User;
   userEmail: string;
+  userId: number;
 
   get email(): string { return this.initPasswordForm.get('email').value as string; }
   get passwords() { return this.initPasswordForm.controls[ 'passwords' ] as FormControl; }
@@ -78,20 +79,21 @@ export class InitPasswordComponent implements OnInit {
       );
   }
 
-  getUserInfos(email: string) {
-    this._compteService.getUserByEmail(email)
+  getUserInfos(id: number) {
+    this._compteService.getUserById(id)
       .subscribe(user => {
         this.user = user.obj;
+        this.userEmail = user.obj.email;
+        this.initPasswordForm.get('email').setValue(this.userEmail);
       }, err => {
         console.log(err);
       });
   }
 
   ngOnInit() {
-    if (this._activatedRoute.snapshot.params[ 'email' ] !== undefined) {
-      this.userEmail = this._activatedRoute.snapshot.params[ 'email' ];
-      this.initPasswordForm.get('email').setValue(this.userEmail);
-      this.getUserInfos(this.userEmail);
+    if (this._activatedRoute.snapshot.params[ '_id' ] !== undefined) {
+      this.userId = this._activatedRoute.snapshot.params[ '_id' ];
+      this.getUserInfos(this.userId);
     } else {
       this._flashMsg.displayMsg('Ce lien a expiré. Entrez votre adresse E-mail pour recevoir un lien valide.', 'alert-danger', 5000);
       this._router.navigate([ '/forgot-password' ]);

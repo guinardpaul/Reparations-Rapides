@@ -20,7 +20,7 @@ const appRoutes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'about', component: AboutComponent },
   { path: 'compte', component: CompteComponent, canActivate: [ AuthGuard ] },
-  { path: 'compte/init-password/:email', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
+  { path: 'compte/init-password/:_id', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'compte/init-password', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'compte-valide', component: ValidateAccountComponent, canActivate: [ NotAuthGuard ] },
   { path: 'compte-valide/:_id', component: ValidateAccountComponent, canActivate: [ NotAuthGuard ] },

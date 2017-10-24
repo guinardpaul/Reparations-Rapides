@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="home">Reparations Rapidos</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
@@ -29,12 +29,52 @@
         <li class="nav-item" *ngIf="_authService.loggedIn()">
           <a class="nav-link cursor" (click)="onLogout()">Logout</a>
         </li>
-        <!-- <li>
+         <li>
           <form class="form-inline marge-searchBar">
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
-        </li> -->
+        </li> 
+      </ul>
+
+    </div>
+  </div>
+</nav> -->
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" routerLink="home">Reparations Rapidos</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+
+      <ul class="nav navbar-nav">
+        <li routerLinkActive="active">
+          <a routerLink="home">Home</a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li routerLinkActive="active">
+          <a routerLink="about">A propos</a>
+        </li>
+        <li *ngIf="_authService.loggedIn()" routerLinkActive="active">
+          <a routerLink="compte">Compte</a>
+        </li>
+        <li *ngIf="!_authService.loggedIn()" routerLinkActive="active">
+          <a routerLink="login">Login</a>
+        </li>
+        <li *ngIf="!_authService.loggedIn()" routerLinkActive="active">
+          <a routerLink="register">Register</a>
+        </li>
+        <li *ngIf="_authService.loggedIn()">
+          <a class="cursor" (click)="onLogout()">Logout</a>
+        </li>
       </ul>
 
     </div>

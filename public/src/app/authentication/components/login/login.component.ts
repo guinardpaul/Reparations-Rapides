@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
       }, err => {
         this.processing = false;
         if (!err.ok) {
-          this._flashMsg.displayMsg(JSON.parse(err.error).message, 'alert-danger', 3000);
+          this._flashMsg.displayMsg(err.error.message, 'alert-danger', 3000);
         } else {
           console.log(err);
         }

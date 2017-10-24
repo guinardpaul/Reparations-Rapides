@@ -1,3 +1,9 @@
-.marge-navbar {
-  margin-top: 70px;
+.marge-router {
+  margin-top: 100px;
+}
+
+.marge-flashMsg {
+  margin-top: -50px;
+  position: fixed;
+  width: 100%
 }
