@@ -53,9 +53,14 @@ const userSchema = new Schema({
   },
   numTel: {
     type: String,
-    required: false,
+    required: true,
     minlength: 10,
     maxlength: 10
+  },
+  validAccount: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 });
 

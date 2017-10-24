@@ -35,6 +35,11 @@ module.exports = (passport) => {
           message: 'Email ou mot de passe invalide'
         });
 
+      if (!user.validAccount) return done(null, false, {
+        success: false,
+        message: 'Le compte n\'est pas activé, Vérifier votre boîte mail'
+      });
+
       // Authentication réussie
       return done(null, user, {
         success: true,

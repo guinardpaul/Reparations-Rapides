@@ -23,6 +23,7 @@ const appRoutes: Routes = [
   { path: 'compte/init-password/:email', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'compte/init-password', component: InitPasswordComponent, canActivate: [ NotAuthGuard ] },
   { path: 'compte-valide', component: ValidateAccountComponent, canActivate: [ NotAuthGuard ] },
+  { path: 'compte-valide/:id', component: ValidateAccountComponent, canActivate: [ NotAuthGuard ] },
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 

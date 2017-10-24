@@ -34,6 +34,10 @@ export class CompteService {
     return this._http.get(`${this.url}/email/${email}`);
   }
 
+  getUserById(id: number): Observable<any> {
+    return this._http.get(`${this.url}/id/${id}`);
+  }
+
   getProfile(): Observable<any> {
     this.createAuthHeaders();
     if (this.authToken !== undefined) {
@@ -44,6 +48,11 @@ export class CompteService {
   initUserPassword(user: User): Observable<any> {
     console.log(user);
     return this._http.put(`${this.url}/init-password/${user._id}`, user);
+  }
+
+  validateAccount(user: User): Observable<any> {
+    user.validAccount = true;
+    return this._http.put(`${this.url}/validate-account/${user._id}`, user);
   }
 
 }

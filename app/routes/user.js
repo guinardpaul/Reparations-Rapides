@@ -28,6 +28,35 @@ module.exports = (router) => {
         }
     });
 
+    router.get('/id/:_id', (req, res, next) => {
+        if (!req.params._id) {
+            return res.status(409).json({
+                success: false,
+                message: 'email not provided'
+            });
+        } else if (!req.params._id) {
+            res.status(409).json({
+                success: false,
+                message: 'id not provided'
+            });
+        } else {
+            User.findOne({ _id: req.params._id }).select('nom prenom email validAccount').exec((err, user) => {
+                if (err) return next(err);
+                if (!user) {
+                    res.status(409).json({
+                        success: false,
+                        message: 'user not find'
+                    });
+                } else {
+                    return res.status(200).json({
+                        success: true,
+                        obj: user
+                    });
+                }
+            });
+        }
+    });
+
     router.put('/init-password/:_id', (req, res, next) => {
         if (!req.body.password) {
             res.status(409).json({
@@ -63,6 +92,42 @@ module.exports = (router) => {
                                 obj: raw
                             });
                         }
+                    });
+                }
+            });
+        }
+    });
+
+    router.put('/validate-account/:_id', (req, res, next) => {
+        if (!req.body) {
+            res.status(409).json({
+                success: false,
+                message: 'body not provided'
+            });
+        }
+        else if (!req.params._id) {
+            res.status(409).json({
+                success: false,
+                message: 'id not provided'
+            });
+        } else {
+            User.findByIdAndUpdate(req.params._id, { validAccount: req.body.validAccount }, { new: true }, (err, user) => {
+                if (err) return next(err);
+                if (!user) {
+                    res.status(409).json({
+                        success: false,
+                        message: 'user not find'
+                    });
+                } else if (!user.validAccount) {
+                    res.status(409).json({
+                        success: false,
+                        message: 'Erreur. Compte non validé'
+                    });
+                } else {
+                    res.status(200).json({
+                        success: true,
+                        message: 'Compte validé',
+                        obj: user
                     });
                 }
             });
