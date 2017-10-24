@@ -3,8 +3,13 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 // Services
 import { AuthenticationService } from '../../services/authentication.service';
+import { FlashMsgService } from '../../../shared/services/flash-msg.service';
+import { EmailService } from '../../../shared/services/email.service';
 // Models
+import { Email } from '../../../shared/models/Email';
 import { User } from '../../../shared/models/User';
+// Templates
+import * as mailTemplate from '../../../shared/models/template-email';
 
 @Component({
   selector: 'app-register',
@@ -26,6 +31,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthenticationService,
+    private _emailService: EmailService,
+    private _flashMsg: FlashMsgService,
     private _router: Router
   ) {
     this.createForm();
@@ -73,6 +80,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegister() {
+    this.processing = true;
     this.user = {
       nom: this.nom,
       prenom: this.prenom,
@@ -85,8 +93,32 @@ export class RegisterComponent implements OnInit {
       .subscribe(data => {
         console.log('register...');
         console.log(data);
+        this.validateAccountEmail(data.obj);
       }, err => {
         console.log(err);
+      });
+  }
+
+  validateAccountEmail(user: User) {
+    const mailBody = mailTemplate.validateAccount(user);
+
+    const mail: Email = {
+      to: user.email,
+      subject: 'Vérification du compte',
+      text: mailBody
+    };
+
+    this._emailService.sendMail(mail)
+      .subscribe(
+      data => {
+        console.log(data);
+        this.processing = false;
+        this._flashMsg.displayMsg(`Création de compte avec succès. Un Email a été envoyé à l'adresse ${user.email}`, 'alert-success', 3000);
+      },
+      err => {
+        console.log(err);
+        this._flashMsg.displayMsg('Erreur durant la création du compte, réessayer plus tard', 'alert-danger', 3000);
+        this.processing = false;
       });
   }
 

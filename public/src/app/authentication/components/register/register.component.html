@@ -27,5 +27,5 @@
         required />
     </div>
   </div>
-  <button [disabled]="!registerForm.valid" type="submit" class="btn btn-success">Sign up</button>
+  <button [disabled]="!registerForm.valid || processing" type="submit" class="btn btn-success">Sign up</button>
 </form>

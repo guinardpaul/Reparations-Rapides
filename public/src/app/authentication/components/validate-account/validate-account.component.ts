@@ -47,11 +47,11 @@ export class ValidateAccountComponent implements OnInit {// TODO: A vérifier
   }
 
   ngOnInit() {
-    if (this._activatedRoute.snapshot.params[ 'id' ] !== undefined) {
-      this.idUser = this._activatedRoute.snapshot.params[ 'id' ];
+    if (this._activatedRoute.snapshot.params[ '_id' ] !== undefined) {
+      this.idUser = this._activatedRoute.snapshot.params[ '_id' ];
       this.getUserById(this.idUser);
     } else {
-      this._flashMsg.displayMsg('Lien invalide', 'alert-danger', 2000);
+      this._flashMsg.displayMsg('Lien invalide', 'alert-danger', 3000);
       this._router.navigate([ '/' ]);
     }
   }
