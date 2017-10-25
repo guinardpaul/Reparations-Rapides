@@ -1,50 +1,48 @@
 <h2>Register</h2>
 <form (submit)="onRegister()" [formGroup]="registerForm" class="form-horizontal">
-  <div class="form-group">
-    <label for="nom">Nom:</label>
-    <input type="text" name="nom" class="form-control " id="nom" formControlName="nom" required autofocus />
-  </div>
-  <div class="form-group">
-    <label for="nom">Prénom:</label>
-    <input type="text" name="prenom" class="form-control " id="prenom" formControlName="prenom" required />
-  </div>
-  <div class="form-group">
-    <label for="email">Email:</label>
-    <input type="text" name="email" class="form-control " id="email" formControlName="email" required />
-  </div>
-  <div class="form-group">
-    <label for="numTel">numTel:</label>
-    <input type="text" name="numTel" class="form-control " id="numTel" formControlName="numTel" required />
-  </div>
-  <div formGroupName="passwords">
     <div class="form-group">
-      <label for="password">Mot de passe:</label>
-      <input type="password" name="password" class="form-control " id="password" formControlName="password" required />
+        <label for="nom">Nom:</label>
+        <input type="text" name="nom" class="form-control " id="nom" formControlName="nom" required autofocus />
     </div>
     <div class="form-group">
-      <label for="confirmPassword">Confirmation:</label>
-      <input type="password" name="confirmPassword" class="form-control " id="confirmPassword" formControlName="confirmPassword"
-        required />
-    </div>
-  </div>
-  <div formGroupName="adresse">
-    <div class="form-group">
-      <label for="rue">Rue:</label>
-      <input type="text" name="rue" class="form-control " id="rue" formControlName="rue" required />
+        <label for="nom">Prénom:</label>
+        <input type="text" name="prenom" class="form-control " id="prenom" formControlName="prenom" required />
     </div>
     <div class="form-group">
-      <label for="complementAdresse">Complément adresse:</label>
-      <input type="text" name="complementAdresse" class="form-control " id="complementAdresse" formControlName="complementAdresse"
-      />
+        <label for="email">Email:</label>
+        <input type="text" name="email" class="form-control " id="email" formControlName="email" required />
     </div>
     <div class="form-group">
-      <label for="cp">Code postal:</label>
-      <input type="text" name="cp" class="form-control " id="cp" formControlName="cp" required />
+        <label for="numTel">numTel:</label>
+        <input type="text" name="numTel" class="form-control " id="numTel" formControlName="numTel" required />
     </div>
-    <div class="form-group">
-      <label for="ville">Ville:</label>
-      <input type="text" name="ville" class="form-control " id="ville" formControlName="ville" required />
+    <div formGroupName="passwords">
+        <div class="form-group">
+            <label for="password">Mot de passe:</label>
+            <input type="password" name="password" class="form-control " id="password" formControlName="password" required />
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirmation:</label>
+            <input type="password" name="confirmPassword" class="form-control " id="confirmPassword" formControlName="confirmPassword" required />
+        </div>
     </div>
-  </div>
-  <button [disabled]="!registerForm.valid || processing" type="submit" class="btn btn-success">Sign up</button>
+    <div formGroupName="adresse">
+        <div class="form-group">
+            <label for="rue">Rue:</label>
+            <input type="text" name="rue" class="form-control " id="rue" formControlName="rue" required />
+        </div>
+        <div class="form-group">
+            <label for="complementAdresse">Complément adresse:</label>
+            <input type="text" name="complementAdresse" class="form-control " id="complementAdresse" formControlName="complementAdresse" />
+        </div>
+        <div class="form-group">
+            <label for="cp">Code postal:</label>
+            <input type="text" name="cp" class="form-control " id="cp" formControlName="cp" required />
+        </div>
+        <div class="form-group">
+            <label for="ville">Ville:</label>
+            <input type="text" name="ville" class="form-control " id="ville" formControlName="ville" required />
+        </div>
+    </div>
+    <button [disabled]="!registerForm.valid || processing" type="submit" class="btn btn-success">Sign up</button>
 </form>
