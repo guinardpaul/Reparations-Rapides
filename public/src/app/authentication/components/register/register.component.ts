@@ -25,6 +25,11 @@ export class RegisterComponent implements OnInit {
   private get passwords() { return this.registerForm.controls[ 'passwords' ] as FormControl; }
   private get password() { return this.passwords.get('password').value as string; }
   private get confirmPassword() { return this.passwords.get('confirmPassword').value as string; }
+  private get adresse() { return this.registerForm.controls[ 'adresse' ] as FormControl; }
+  private get rue() { return this.adresse.get('rue').value as string; }
+  private get complementAdresse() { return this.adresse.get('complementAdresse').value as string; }
+  private get cp() { return this.adresse.get('cp').value as string; }
+  private get ville() { return this.adresse.get('ville').value as string; }
   private user: User;
   private processing: boolean;
 
@@ -62,6 +67,24 @@ export class RegisterComponent implements OnInit {
         Validators.minLength(10),
         Validators.maxLength(10)
       ]) ],
+      adresse: this._fb.group({
+        rue: [ '', Validators.compose([
+          Validators.required,
+          Validators.maxLength(300)
+        ]) ],
+        complementAdresse: [ '', Validators.compose([
+          Validators.required,
+          Validators.maxLength(150)
+        ]) ],
+        cp: [ '', Validators.compose([
+          Validators.minLength(2),
+          Validators.maxLength(20)
+        ]) ],
+        ville: [ '', Validators.compose([
+          Validators.required,
+          Validators.maxLength(150)
+        ]) ]
+      }),
       passwords: this._fb.group({
         password: [ '', Validators.compose([
           Validators.required,
@@ -86,8 +109,15 @@ export class RegisterComponent implements OnInit {
       prenom: this.prenom,
       email: this.email,
       numTel: this.numTel,
-      password: this.password
+      password: this.password,
+      adresse: {
+        rue: this.rue,
+        complementAdresse: this.complementAdresse,
+        cp: this.cp,
+        ville: this.ville
+      }
     };
+    console.log(this.user);
 
     this._authService.register(this.user)
       .subscribe(data => {
@@ -95,6 +125,7 @@ export class RegisterComponent implements OnInit {
         console.log(data);
         this.validateAccountEmail(data.obj);
       }, err => {
+        this.processing = false;
         console.log(err);
       });
   }
@@ -120,6 +151,10 @@ export class RegisterComponent implements OnInit {
         this._flashMsg.displayMsg('Erreur durant la création du compte, réessayer plus tard', 'alert-danger', 3000);
         this.processing = false;
       });
+  }
+
+  checkEmailUnicite(email) {
+
   }
 
   ngOnInit() {

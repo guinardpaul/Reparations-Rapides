@@ -4,6 +4,32 @@ const config = require('../../app/config/database');
 
 module.exports = (router) => {
 
+    router.get('checkEmail/:email', (req, res, next) => {
+        if (!req.params.email) {
+            return res.status(409).json({
+                success: false,
+                message: 'email not provided'
+            });
+        } else {
+            User.findOne({ email: req.params.email }).select('email').exec((err, user) => {
+                if (err) return next(err);
+                if (!user) {
+                    // Email non enregistré => valid
+                    res.status(200).json({
+                        success: true,
+                        message: 'user not find'
+                    });
+                } else {
+                    // EMail enregistré => invalid
+                    return res.status(409).json({
+                        success: false,
+                        message: 'Un compte existe déjà avec cette adresse email.'
+                    });
+                }
+            });
+        }
+    });
+
     router.get('/email/:email', (req, res, next) => {
         if (!req.params.email) {
             return res.status(409).json({

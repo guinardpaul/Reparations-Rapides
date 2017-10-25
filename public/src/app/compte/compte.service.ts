@@ -55,4 +55,8 @@ export class CompteService {
     return this._http.put(`${this.url}/validate-account/${user._id}`, user);
   }
 
+  checkEmailUnicite(email: string): Observable<any> {
+    return this._http.get(`${this.url}/checkEmail/${email}`);
+  }
+
 }

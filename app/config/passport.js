@@ -81,7 +81,8 @@ module.exports = (passport) => {
             prenom: req.body.prenom,
             numTel: req.body.numTel,
             email: email,
-            password: password
+            password: password,
+            adresse: req.body.adresse
           });
 
           newUser.save((err, data) => {

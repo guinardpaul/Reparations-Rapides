@@ -6,4 +6,10 @@ export class User {
   email: string;
   password: string;
   validAccount?: boolean;
+  adresse: {
+    rue: string,
+    complementAdresse: string,
+    cp: string,
+    ville: string
+  };
 }

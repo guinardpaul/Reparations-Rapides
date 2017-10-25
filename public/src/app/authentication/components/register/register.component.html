@@ -27,5 +27,24 @@
         required />
     </div>
   </div>
+  <div formGroupName="adresse">
+    <div class="form-group">
+      <label for="rue">Rue:</label>
+      <input type="text" name="rue" class="form-control " id="rue" formControlName="rue" required />
+    </div>
+    <div class="form-group">
+      <label for="complementAdresse">Complément adresse:</label>
+      <input type="text" name="complementAdresse" class="form-control " id="complementAdresse" formControlName="complementAdresse"
+      />
+    </div>
+    <div class="form-group">
+      <label for="cp">Code postal:</label>
+      <input type="text" name="cp" class="form-control " id="cp" formControlName="cp" required />
+    </div>
+    <div class="form-group">
+      <label for="ville">Ville:</label>
+      <input type="text" name="ville" class="form-control " id="ville" formControlName="ville" required />
+    </div>
+  </div>
   <button [disabled]="!registerForm.valid || processing" type="submit" class="btn btn-success">Sign up</button>
 </form>

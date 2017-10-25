@@ -57,6 +57,23 @@ const userSchema = new Schema({
     minlength: 10,
     maxlength: 10
   },
+  adresse: {
+    rue: {
+      type: String,
+      required: true,
+    },
+    complementAdresse: {
+      type: String
+    },
+    cp: {
+      type: String,
+      required: true
+    },
+    ville: {
+      type: String,
+      required: true
+    }
+  },
   validAccount: {
     type: Boolean,
     required: true,
