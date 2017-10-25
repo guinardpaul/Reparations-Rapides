@@ -16,7 +16,7 @@ import * as mailTemplate from '../../../shared/models/template-email';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: [ './register.component.css' ]
 })
 export class RegisterComponent implements OnInit {
   private registerForm: FormGroup;
@@ -24,10 +24,10 @@ export class RegisterComponent implements OnInit {
   private get prenom() { return this.registerForm.get('prenom').value as string; }
   private get email() { return this.registerForm.get('email').value as string; }
   private get numTel() { return this.registerForm.get('numTel').value as string; }
-  private get passwords() { return this.registerForm.controls['passwords'] as FormControl; }
+  private get passwords() { return this.registerForm.controls[ 'passwords' ] as FormControl; }
   private get password() { return this.passwords.get('password').value as string; }
   private get confirmPassword() { return this.passwords.get('confirmPassword').value as string; }
-  private get adresse() { return this.registerForm.controls['adresse'] as FormControl; }
+  private get adresse() { return this.registerForm.controls[ 'adresse' ] as FormControl; }
   private get rue() { return this.adresse.get('rue').value as string; }
   private get complementAdresse() { return this.adresse.get('complementAdresse').value as string; }
   private get cp() { return this.adresse.get('cp').value as string; }
@@ -53,57 +53,57 @@ export class RegisterComponent implements OnInit {
 
   createForm() {
     this.registerForm = this._fb.group({
-      nom: ['', Validators.compose([
+      nom: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(100)
-      ])],
-      prenom: ['', Validators.compose([
+      ]) ],
+      prenom: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(1),
         Validators.maxLength(100)
-      ])],
-      email: ['', Validators.compose([
+      ]) ],
+      email: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(100),
         this._validationService.emailValidation
-      ])],
-      numTel: ['', Validators.compose([
+      ]) ],
+      numTel: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(10),
         Validators.maxLength(10),
         this._validationService.numTelValidation
-      ])],
+      ]) ],
       adresse: this._fb.group({
-        rue: ['', Validators.compose([
+        rue: [ '', Validators.compose([
           Validators.required,
           Validators.maxLength(300)
-        ])],
-        complementAdresse: ['', Validators.compose([
+        ]) ],
+        complementAdresse: [ '', Validators.compose([
           Validators.required,
           Validators.maxLength(150)
-        ])],
-        cp: ['', Validators.compose([
+        ]) ],
+        cp: [ '', Validators.compose([
           Validators.minLength(2),
           Validators.maxLength(20)
-        ])],
-        ville: ['', Validators.compose([
+        ]) ],
+        ville: [ '', Validators.compose([
           Validators.required,
           Validators.maxLength(150)
-        ])]
+        ]) ]
       }),
       passwords: this._fb.group({
-        password: ['', Validators.compose([
+        password: [ '', Validators.compose([
           Validators.required,
           Validators.minLength(6),
           Validators.maxLength(150)
-        ])],
-        confirmPassword: ['', Validators.compose([
+        ]) ],
+        confirmPassword: [ '', Validators.compose([
           Validators.required,
           Validators.minLength(6),
           Validators.maxLength(150)
-        ])],
+        ]) ],
       }, {
           validator: this._validationService.comparePasswords
         })
@@ -150,6 +150,7 @@ export class RegisterComponent implements OnInit {
       data => {
         console.log(data);
         this.processing = false;
+        this._router.navigate([ '/login' ]);
         this._flashMsg.displayMsg(`Création de compte avec succès. Un Email a été envoyé à l'adresse ${user.email}`, 'alert-success', 3000);
       },
       err => {

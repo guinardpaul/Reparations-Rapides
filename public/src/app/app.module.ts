@@ -27,7 +27,7 @@ import { NotAuthGuard } from './routing/guards/not-auth.guard';
     AppComponent,
     AboutComponent,
     NavbarComponent,
-    MainPageComponent
+    MainPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +48,6 @@ import { NotAuthGuard } from './routing/guards/not-auth.guard';
     EmailService,
     ValidationService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

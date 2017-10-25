@@ -1,6 +1,8 @@
 <h2>Register</h2>
-<div *ngIf="verifEmailUnicite">Un compte avec cet Email existe déjà. <a routerLink="/login" (click)="onLogin()">Se connecter ?</a></div>
-<form (submit)="onRegister()" [formGroup]="registerForm" class="form-horizontal">
+<div *ngIf="verifEmailUnicite">Un compte avec cet Email existe déjà.
+    <a routerLink="/login" (click)="onLogin()">Se connecter ?</a>
+</div>
+<!-- <form (submit)="onRegister()" [formGroup]="registerForm" class="form-horizontal">
     <div class="form-group">
         <label for="nom">Nom:</label>
         <input type="text" name="nom" class="form-control " id="nom" formControlName="nom" required autofocus />
@@ -11,7 +13,8 @@
     </div>
     <div class="form-group">
         <label for="email">Email:</label>
-        <input type="text" name="email" class="form-control " id="email" formControlName="email" (blur)="checkEmailUnicite(email)" required />
+        <input type="text" name="email" class="form-control " id="email" formControlName="email" (blur)="checkEmailUnicite(email)"
+            required />
     </div>
     <div class="form-group">
         <label for="numTel">numTel:</label>
@@ -24,7 +27,8 @@
         </div>
         <div class="form-group">
             <label for="confirmPassword">Confirmation:</label>
-            <input type="password" name="confirmPassword" class="form-control " id="confirmPassword" formControlName="confirmPassword" required />
+            <input type="password" name="confirmPassword" class="form-control " id="confirmPassword" formControlName="confirmPassword"
+                required />
         </div>
     </div>
     <div formGroupName="adresse">
@@ -34,7 +38,8 @@
         </div>
         <div class="form-group">
             <label for="complementAdresse">Complément adresse:</label>
-            <input type="text" name="complementAdresse" class="form-control " id="complementAdresse" formControlName="complementAdresse" />
+            <input type="text" name="complementAdresse" class="form-control " id="complementAdresse" formControlName="complementAdresse"
+            />
         </div>
         <div class="form-group">
             <label for="cp">Code postal:</label>
@@ -46,4 +51,82 @@
         </div>
     </div>
     <button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" class="btn btn-success">Sign up</button>
+</form> -->
+
+<form (submit)="onRegister()" [formGroup]="registerForm" class="register-form">
+    <table class="container-width">
+        <tr>
+            <td>
+                <mat-form-field class="input-width">
+                    <input matInput placeholder="Nom" formControlName="nom" autofocus required>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field class="input-width">
+                    <input matInput placeholder="Prénom" formControlName="prenom" required>
+                </mat-form-field>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <mat-form-field class="input-width">
+                    <input matInput placeholder="Email" formControlName="email" required>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field class="input-width">
+                    <input matInput placeholder="Téléphone" formControlName="numTel" required>
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+
+    <table class="container-width" formGroupName="passwords">
+        <tr>
+            <td>
+                <mat-form-field class="input-width">
+                    <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
+                </mat-form-field>
+            </td>
+            <td>
+                <mat-form-field class="input-width">
+                    <input matInput type="password" placeholder="Confirmation" formControlName="confirmPassword" required>
+                </mat-form-field>
+            </td>
+        </tr>
+    </table>
+
+    <div formGroupName="adresse">
+
+        <mat-form-field class="container-width">
+            <textarea matInput placeholder="Adresse" formControlName="rue" required></textarea>
+        </mat-form-field>
+
+        <table class="container-width">
+
+            <tr>
+                <td>
+                    <mat-form-field class="input-width">
+                        <input matInput placeholder="Complément adresse" formControlName="complementAdresse" required>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field class="input-width">
+                        <input matInput placeholder="Ville" formControlName="ville" required>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field class="input-width">
+                        <input matInput #postalCode maxlength="5" placeholder="Code postal" formControlName="cp" required>
+                        <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+                    </mat-form-field>
+                </td>
+            </tr>
+
+        </table>
+
+    </div>
+    <button mat-raised-button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" color="primary">S'enregistrer</button>
+
+
 </form>

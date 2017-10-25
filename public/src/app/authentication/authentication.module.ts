@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-
+import { MaterialModule } from '../shared/material.module';
 // Components
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
@@ -14,6 +14,7 @@ import { ValidateAccountComponent } from './components/validate-account/validate
 @NgModule({
   imports: [
     CommonModule,
+    MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule
