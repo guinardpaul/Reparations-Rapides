@@ -12,7 +12,7 @@ import { AuthGuard } from '../../../routing/guards/auth.guard';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: [ './login.component.css' ]
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   @ViewChild('emailInput') emailInput: ElementRef;
@@ -40,12 +40,12 @@ export class LoginComponent implements OnInit {
 
   createForm() {
     this.loginForm = this._fb.group({
-      email: [ '', Validators.compose([
+      email: ['', Validators.compose([
         Validators.required
-      ]) ],
-      password: [ '', Validators.compose([
+      ])],
+      password: ['', Validators.compose([
         Validators.required
-      ]) ]
+      ])]
     });
   }
 
@@ -66,9 +66,9 @@ export class LoginComponent implements OnInit {
           this._flashMsg.displayMsg('Connexion avec succés', 'alert-success', 1500);
           setTimeout(() => {
             if (this.previousUrl) {
-              this._router.navigate([ this.previousUrl ]);
+              this._router.navigate([this.previousUrl]);
             } else {
-              this._router.navigate([ '/' ]);
+              this._router.navigate(['/']);
             }
           }, 1000);
         }
@@ -88,7 +88,6 @@ export class LoginComponent implements OnInit {
       this._renderer.invokeElementMethod(this.passwordInput.nativeElement, 'focus');
       localStorage.clear();
     }
-
 
     if (this._authGuard.redirectURL) {
       this._flashMsg.displayMsg('Vous devez être connecté pour accéder à cette page', 'alert-warning', 2000);

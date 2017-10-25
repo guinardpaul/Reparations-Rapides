@@ -6,7 +6,7 @@ export class User {
   email: string;
   password: string;
   validAccount?: boolean;
-  adresse: {
+  adresse?: {
     rue: string,
     complementAdresse: string,
     cp: string,

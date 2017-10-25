@@ -6,6 +6,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 import { EmailService } from '../../../shared/services/email.service';
 import { CompteService } from '../../../compte/compte.service';
+import { ValidationService } from '../../services/validation.service';
 // Models
 import { Email } from '../../../shared/models/Email';
 import { User } from '../../../shared/models/User';
@@ -33,6 +34,7 @@ export class RegisterComponent implements OnInit {
   private get ville() { return this.adresse.get('ville').value as string; }
   private user: User;
   private processing: boolean;
+  private verifEmailUnicite: boolean;
 
   constructor(
     private _fb: FormBuilder,
@@ -40,11 +42,13 @@ export class RegisterComponent implements OnInit {
     private _emailService: EmailService,
     private _flashMsg: FlashMsgService,
     private _compteService: CompteService,
+    private _validationService: ValidationService,
     private _router: Router
   ) {
     this.createForm();
     this.user = new User();
     this.processing = false;
+    this.verifEmailUnicite = false;
   }
 
   createForm() {
@@ -63,12 +67,13 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         Validators.minLength(6),
         Validators.maxLength(100),
-        this.checkEmailUnicite
+        this._validationService.emailValidation
       ])],
       numTel: ['', Validators.compose([
         Validators.required,
         Validators.minLength(10),
-        Validators.maxLength(10)
+        Validators.maxLength(10),
+        this._validationService.numTelValidation
       ])],
       adresse: this._fb.group({
         rue: ['', Validators.compose([
@@ -99,9 +104,9 @@ export class RegisterComponent implements OnInit {
           Validators.minLength(6),
           Validators.maxLength(150)
         ])],
-      }, Validators.compose([
-        // TODO: ajouter comparaison password validation
-      ]))
+      }, {
+          validator: this._validationService.comparePasswords
+        })
     });
   }
 
@@ -120,7 +125,6 @@ export class RegisterComponent implements OnInit {
         ville: this.ville
       }
     };
-    console.log(this.user);
 
     this._authService.register(this.user)
       .subscribe(data => {
@@ -135,7 +139,6 @@ export class RegisterComponent implements OnInit {
 
   validateAccountEmail(user: User) {
     const mailBody = mailTemplate.validateAccount(user);
-
     const mail: Email = {
       to: user.email,
       subject: 'Vérification du compte',
@@ -156,17 +159,24 @@ export class RegisterComponent implements OnInit {
       });
   }
 
-  checkEmailUnicite(controls) {
-    this._compteService.checkEmailUnicite(controls)
-      .subscribe(data => {
-        if (!data.success) {
-          return {
-            checkEmailUnicite: true
-          };
-        }
-      }, err => console.log(err)
-      );
-    return null;
+  checkEmailUnicite(email: string) {
+    if (email !== '') {
+      this._compteService.checkEmailUnicite(email)
+        .subscribe(data => {
+          console.log(data);
+          if (!data.success) {
+            this.verifEmailUnicite = true;
+          } else {
+            this.verifEmailUnicite = false;
+          }
+        }, err => console.log(err)
+        );
+      console.log(this.verifEmailUnicite);
+    }
+  }
+
+  onLogin() {
+    localStorage.setItem('init-password', this.email);
   }
 
   ngOnInit() {

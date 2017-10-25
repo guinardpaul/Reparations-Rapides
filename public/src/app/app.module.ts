@@ -17,6 +17,7 @@ import { AuthenticationService } from './authentication/services/authentication.
 import { CompteService } from './compte/compte.service';
 import { FlashMsgService } from './shared/services/flash-msg.service';
 import { EmailService } from './shared/services/email.service';
+import { ValidationService } from './authentication/services/validation.service';
 // Guards
 import { AuthGuard } from './routing/guards/auth.guard';
 import { NotAuthGuard } from './routing/guards/not-auth.guard';
@@ -44,8 +45,9 @@ import { NotAuthGuard } from './routing/guards/not-auth.guard';
     CompteService,
     AuthGuard,
     NotAuthGuard,
-    EmailService
+    EmailService,
+    ValidationService
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

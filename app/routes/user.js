@@ -4,7 +4,7 @@ const config = require('../../app/config/database');
 
 module.exports = (router) => {
 
-    router.get('checkEmail/:email', (req, res, next) => {
+    router.get('/checkEmail/:email', (req, res, next) => {
         if (!req.params.email) {
             return res.status(409).json({
                 success: false,
@@ -21,7 +21,7 @@ module.exports = (router) => {
                     });
                 } else {
                     // EMail enregistré => invalid
-                    return res.status(409).json({
+                    return res.status(200).json({
                         success: false,
                         message: 'Un compte existe déjà avec cette adresse email.'
                     });
@@ -130,8 +130,7 @@ module.exports = (router) => {
                 success: false,
                 message: 'body not provided'
             });
-        }
-        else if (!req.params._id) {
+        } else if (!req.params._id) {
             res.status(409).json({
                 success: false,
                 message: 'id not provided'
