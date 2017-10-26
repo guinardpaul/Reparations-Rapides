@@ -1,4 +1,4 @@
-<h2>Register</h2>
+<h2 class="page-header">Créer un compte</h2>
 <div *ngIf="verifEmailUnicite">Un compte avec cet Email existe déjà.
     <a routerLink="/login" (click)="onLogin()">Se connecter ?</a>
 </div>
@@ -52,81 +52,90 @@
     </div>
     <button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" class="btn btn-success">Sign up</button>
 </form> -->
+<span class="col-sm-4 col-md-4 col-xs-2"></span>
+<mat-card class="register-card col-sm-4 col-md-4 col-xs-8">
+    <mat-card-header>
+        <mat-card-title style="font-size: 40px;">Créer un compte</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form (submit)="onRegister()" [formGroup]="registerForm" class="register-form">
+            <table class="container-width">
+                <tr>
+                    <td>
+                        <mat-form-field class="input-width">
+                            <input matInput type="text" placeholder="Nom" formControlName="nom" autofocus required>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="input-width">
+                            <input matInput type="text" placeholder="Prénom" formControlName="prenom" required>
+                        </mat-form-field>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <mat-form-field class="input-width">
+                            <input matInput type="email" placeholder="Email" formControlName="email" required>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="input-width">
+                            <input matInput type="text" placeholder="Téléphone" formControlName="numTel" required>
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </table>
 
-<form (submit)="onRegister()" [formGroup]="registerForm" class="register-form">
-    <table class="container-width">
-        <tr>
-            <td>
-                <mat-form-field class="input-width">
-                    <input matInput placeholder="Nom" formControlName="nom" autofocus required>
+            <table class="container-width" formGroupName="passwords">
+                <tr>
+                    <td>
+                        <mat-form-field class="input-width">
+                            <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field class="input-width">
+                            <input matInput type="password" placeholder="Confirmation" formControlName="confirmPassword" required>
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </table>
+
+            <div formGroupName="adresse">
+
+                <mat-form-field class="container-width">
+                    <textarea matInput type="text" placeholder="Adresse" formControlName="rue" required></textarea>
                 </mat-form-field>
-            </td>
-            <td>
-                <mat-form-field class="input-width">
-                    <input matInput placeholder="Prénom" formControlName="prenom" required>
-                </mat-form-field>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <mat-form-field class="input-width">
-                    <input matInput placeholder="Email" formControlName="email" required>
-                </mat-form-field>
-            </td>
-            <td>
-                <mat-form-field class="input-width">
-                    <input matInput placeholder="Téléphone" formControlName="numTel" required>
-                </mat-form-field>
-            </td>
-        </tr>
-    </table>
 
-    <table class="container-width" formGroupName="passwords">
-        <tr>
-            <td>
-                <mat-form-field class="input-width">
-                    <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
-                </mat-form-field>
-            </td>
-            <td>
-                <mat-form-field class="input-width">
-                    <input matInput type="password" placeholder="Confirmation" formControlName="confirmPassword" required>
-                </mat-form-field>
-            </td>
-        </tr>
-    </table>
+                <table class="container-width">
 
-    <div formGroupName="adresse">
+                    <tr>
+                        <td>
+                            <mat-form-field class="input-width">
+                                <input matInput type="text" placeholder="Complément adresse" formControlName="complementAdresse" required>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field class="input-width">
+                                <input matInput type="text" placeholder="Ville" formControlName="ville" required>
+                            </mat-form-field>
+                        </td>
+                        <td>
+                            <mat-form-field class="input-width">
+                                <input matInput type="text" #postalCode maxlength="5" placeholder="Code postal" formControlName="cp" required>
+                                <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+                            </mat-form-field>
+                        </td>
+                    </tr>
 
-        <mat-form-field class="container-width">
-            <textarea matInput placeholder="Adresse" formControlName="rue" required></textarea>
-        </mat-form-field>
+                </table>
 
-        <table class="container-width">
+            </div>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" color="primary">S'enregistrer</button>
 
-            <tr>
-                <td>
-                    <mat-form-field class="input-width">
-                        <input matInput placeholder="Complément adresse" formControlName="complementAdresse" required>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field class="input-width">
-                        <input matInput placeholder="Ville" formControlName="ville" required>
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field class="input-width">
-                        <input matInput #postalCode maxlength="5" placeholder="Code postal" formControlName="cp" required>
-                        <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
-                    </mat-form-field>
-                </td>
-            </tr>
-
-        </table>
-
-    </div>
-    <button mat-raised-button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" color="primary">S'enregistrer</button>
-
-
-</form>
+    </mat-card-actions>
+</mat-card>
+<span class="col-sm-4 col-md-4 col-xs-2"></span>
