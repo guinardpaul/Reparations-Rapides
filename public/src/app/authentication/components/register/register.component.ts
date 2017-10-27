@@ -13,6 +13,13 @@ import { User } from '../../../shared/models/User';
 // Templates
 import * as mailTemplate from '../../../shared/models/template-email';
 
+/**
+ * Création Compte utilisateur
+ * @author Paul GUINARD
+ * @export RegisterComponent
+ * @class RegisterComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -20,6 +27,10 @@ import * as mailTemplate from '../../../shared/models/template-email';
 })
 export class RegisterComponent implements OnInit {
   private registerForm: FormGroup;
+  private user: User;
+  private processing: boolean;
+  private verifEmailUnicite: boolean;
+
   private get nom() { return this.registerForm.get('nom').value as string; }
   private get prenom() { return this.registerForm.get('prenom').value as string; }
   private get email() { return this.registerForm.get('email').value as string; }
@@ -32,10 +43,18 @@ export class RegisterComponent implements OnInit {
   private get complementAdresse() { return this.adresse.get('complementAdresse').value as string; }
   private get cp() { return this.adresse.get('cp').value as string; }
   private get ville() { return this.adresse.get('ville').value as string; }
-  private user: User;
-  private processing: boolean;
-  private verifEmailUnicite: boolean;
 
+  /**
+   * Creates an instance of RegisterComponent.
+   * @param {FormBuilder} _fb Reactive Form Builder
+   * @param {AuthenticationService} _authService Authentication
+   * @param {EmailService} _emailService Email
+   * @param {FlashMsgService} _flashMsg Flash Msg
+   * @param {CompteService} _compteService Compte utilisateur
+   * @param {ValidationService} _validationService Validation Form Function
+   * @param {Router} _router router
+   * @memberof RegisterComponent
+   */
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthenticationService,
@@ -51,6 +70,11 @@ export class RegisterComponent implements OnInit {
     this.verifEmailUnicite = false;
   }
 
+  /**
+   * Generate registerForm
+   *
+   * @memberof RegisterComponent
+   */
   createForm() {
     this.registerForm = this._fb.group({
       nom: [ '', Validators.compose([
@@ -72,7 +96,7 @@ export class RegisterComponent implements OnInit {
       numTel: [ '', Validators.compose([
         Validators.required,
         Validators.minLength(10),
-        Validators.maxLength(10),
+        Validators.maxLength(40),
         this._validationService.numTelValidation
       ]) ],
       adresse: this._fb.group({
@@ -110,8 +134,77 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  /**
+   * Get Error message du registerForm en fonction des Validators
+   *
+   * @param {string} arg current Input
+   * @returns {string} Error message
+   * @memberof RegisterComponent
+   */
+  getErrorMessage(arg: string): string {
+    switch (arg) {
+      case 'nom':
+        return this.registerForm.controls[ 'nom' ].hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'prenom':
+        return this.registerForm.controls[ 'prenom' ].hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'email':
+        return this.registerForm.controls[ 'email' ].hasError('required') ? 'Ce champ est requis' :
+          this.registerForm.controls[ 'email' ].hasError('emailValidation') ? 'Email invalide' :
+            '';
+
+      case 'numTel':
+        return this.registerForm.controls[ 'numTel' ].hasError('required') ? 'Ce champ est requis' :
+          this.registerForm.controls[ 'numTel' ].hasError('numTelValidation') ? 'Téléphone invalide' :
+            '';
+
+      case 'rue':
+        return this.adresse.get('rue').hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'complementAdresse':
+        return this.adresse.get('complementAdresse').hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'cp':
+        return this.adresse.get('cp').hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'ville':
+        return this.adresse.get('ville').hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'password':
+        return this.passwords.get('password').hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'confirmPassword':
+        return this.passwords.get('confirmPassword').hasError('required') ? 'Ce champ est requis' :
+          '';
+
+      case 'passwords':
+        return this.passwords.hasError('comparePasswords') ? 'Les mots de passe ne sont pas identiques' :
+          '';
+
+      default:
+        break;
+    }
+  }
+
+  /**
+   * Register Compte utilisateur function.
+   * - Set User Object
+   * - Appel function register du authService
+   * - Envoi un email de validation on success
+   *
+   * @memberof RegisterComponent
+   */
   onRegister() {
     this.processing = true;
+    // Set User Object
     this.user = {
       nom: this.nom,
       prenom: this.prenom,
@@ -126,30 +219,47 @@ export class RegisterComponent implements OnInit {
       }
     };
 
+    // Appel function register()
     this._authService.register(this.user)
       .subscribe(data => {
         console.log('register...');
         console.log(data);
-        this.validateAccountEmail(data.obj);
+
+        // Envoi l'email de validtion
+        this.sendEmailValiderCompte(data.obj);
       }, err => {
         this.processing = false;
         console.log(err);
       });
   }
 
-  validateAccountEmail(user: User) {
+  /**
+   * Envoi Email de validation de compte. Appelé par onRegister() => success
+   * - Get le template d'email "validation compte" dans mailTemplate
+   * - Set Email Object
+   * - Appel function sendMail du emailService
+   * - redirect to login page on success
+   *
+   * @param {User} user User précédemment registered dans database
+   * @memberof RegisterComponent
+   */
+  sendEmailValiderCompte(user: User) {
+    // Get email Template validation compte
     const mailBody = mailTemplate.validateAccount(user);
+    // Set Email Object
     const mail: Email = {
       to: user.email,
       subject: 'Vérification du compte',
       text: mailBody
     };
 
+    // Appel function sendMail()
     this._emailService.sendMail(mail)
       .subscribe(
       data => {
         console.log(data);
-        this.processing = false;
+
+        // Redirect to login page
         this._router.navigate([ '/login' ]);
         this._flashMsg.displayMsg(`Création de compte avec succès. Un Email a été envoyé à l'adresse ${user.email}`, 'alert-success', 3000);
       },
@@ -160,22 +270,37 @@ export class RegisterComponent implements OnInit {
       });
   }
 
-  checkEmailUnicite(email: string) {
-    if (email !== '') {
-      this._compteService.checkEmailUnicite(email)
+  /**
+   * Méthode pour vérifier l'unicité de l'email.
+   * Propose de redirect page login si l"email existe déjà
+   *
+   * @returns {boolean} verifEmailUnicite
+   * @memberof RegisterComponent
+   */
+  checkEmailUnicite(): boolean {
+    // Init boolean
+    this.verifEmailUnicite = false;
+
+    if (this.email !== '') {
+      this._compteService.checkEmailUnicite(this.email)
         .subscribe(data => {
-          console.log(data);
+          // Si data.success => Compte utilisateur existe déjà
           if (!data.success) {
             this.verifEmailUnicite = true;
-          } else {
-            this.verifEmailUnicite = false;
           }
         }, err => console.log(err)
         );
-      console.log(this.verifEmailUnicite);
+
+      return this.verifEmailUnicite;
     }
   }
 
+  /**
+   * Méthode appelée quand checkEmailUnicite return true.
+   * Set l'input email de la page login
+   *
+   * @memberof RegisterComponent
+   */
   onLogin() {
     localStorage.setItem('init-password', this.email);
   }

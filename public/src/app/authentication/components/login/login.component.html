@@ -1,20 +1,6 @@
-<!-- <h2 class="page-header">Se connecter</h2>
-<form (submit)="onLogin()" [formGroup]="loginForm" class="form-horizontal">
-  <div class="form-group">
-    <label for="email">Email:</label>
-    <input type="text" name="email" class="form-control" id="email" formControlName="email">
-  </div>
-  <div class="form-group">
-    <label for="password">Mot de passe:</label>
-    <input type="password" name="password" class="form-control" id="password" formControlName="password">
-  </div>
-  <button [disabled]="!loginForm.valid || processing" type="submit" class="btn btn-primary">Se connecter</button>
-</form> -->
-
-<div class="container">
+<!-- <div class="container">
   <div class="card card-container">
-    <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
-    <h1 class="center">Connexion</h1>
+     <h1 class="center">Connexion</h1>
     <br>
     <form (submit)="onLogin()" [formGroup]="loginForm" class="form-signin">
       <span id="reauth-email" class="reauth-email"></span>
@@ -23,16 +9,67 @@
       <input type="password" #passwordInput id="inputPassword" class="form-control" formControlName="password" placeholder="Mot de passe"
         required>
       <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Se connecter</button>
-    </form>
-    <!-- /form -->
-    <a [routerLink]="['/register']" class="forgot-password">
+    </form> -->
+<!-- /form -->
+<!-- <a [routerLink]="['/register']" class="forgot-password">
       Pas de compte ?
     </a>
     <br/>
     <a routerLink="/forgot-password" class="forgot-password">
       Mot de passe oublié ?
     </a>
-  </div>
-  <!-- /card-container -->
-</div>
+  </div> -->
+<!-- /card-container -->
+<!-- </div> -->
 <!-- /container -->
+
+<span class="col-sm-4 col-md-4 col-lg-4 col-xs-2"></span>
+
+<mat-card class="col-sm-4 col-md-4 col-lg-4 col-xs-8" style="background-color: rgb(255, 246, 234);">
+  <form (submit)="onLogin()" [formGroup]="loginForm">
+    <mat-card-header>
+      <mat-card-title style="font-size: 40px;">Se connecter</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="login-container">
+      <!-- Login data -->
+      <div>
+        <mat-form-field class="input">
+          <input matInput type="email" placeholder="Email" formControlName="email" required>
+          <mat-error class="error" *ngIf="loginForm.controls.email.errors">{{getErrorMessage('email')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input">
+          <input matInput type="password" #passwordInput placeholder="Mot de passe" formControlName="password" required>
+          <mat-error class="error" *ngIf="loginForm.controls.password.errors">{{getErrorMessage('password')}}</mat-error>
+        </mat-form-field>
+      </div>
+      <!-- /Login data -->
+
+    </mat-card-content>
+    <!-- Button -->
+    <mat-card-actions>
+      <span class="col-lg-3 col-md-3 col-sm-3 col-xs-2"></span>
+      <span class="col-lg-6 col-md-6 col-sm-6 col-xs-8">
+
+        <button mat-raised-button style="text-align: center !important;" [disabled]="!loginForm.valid || processing" type="submit"
+          color="primary">Se connecter</button>
+        <br/>
+        <br/>
+      </span>
+
+      <span class="col-lg-3 col-md-3 col-sm-3 col-xs-2"></span>
+    </mat-card-actions>
+    <div style="margin-top:50px;">
+      <span class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <a routerLink="/register" class="link">Pas de compte ?</a>
+      </span>
+      <span class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <a routerLink="/forgot-password" class="forgot-password-link">Mot de passe oublié ?</a>
+      </span>
+    </div>
+
+    <!-- /Button -->
+  </form>
+</mat-card>
+
+<span class="col-sm-4 col-md-4 col-lg-4 col-xs-2"></span>

@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-
+// Models
 import { User } from '../models/User';
 
+/**
+ * USED ?
+ * @author Paul GUINARD
+ * @export FlashMsgService
+ * @class UserService
+ */
 @Injectable()
 export class UserService {
   private url: string;

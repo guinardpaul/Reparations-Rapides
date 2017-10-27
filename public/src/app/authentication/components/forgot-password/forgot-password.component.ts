@@ -10,21 +10,36 @@ import { User } from '../../../shared/models/User';
 // Templates
 import * as mailTemplate from '../../../shared/models/template-email';
 
+/**
+ * Forgot Password du Compte utilisateur
+ * @author Paul GUINARD
+ * @export ForgotPasswordComponent
+ * @class ForgotPasswordComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: [ './forgot-password.component.css' ]
 })
 export class ForgotPasswordComponent implements OnInit {
-  forgotPasswordForm: FormGroup;
-  requestSubmitted: boolean;
-  emailUrl: string;
-  adresseEmail: string;
-  processing: boolean;
-  user: User;
+  private forgotPasswordForm: FormGroup;
+  private requestSubmitted: boolean;
+  private emailUrl: string;
+  private adresseEmail: string;
+  private processing: boolean;
+  private user: User;
 
-  get email(): string { return this.forgotPasswordForm.get('email').value as string; }
+  private get email(): string { return this.forgotPasswordForm.get('email').value as string; }
 
+  /**
+   * Creates an instance of ForgotPasswordComponent.
+   * @param {EmailService} _emailService Email
+   * @param {CompteService} _compteService Compte utilisateur
+   * @param {FlashMsgService} _flashMsg Flash Msg
+   * @param {FormBuilder} _fb Reactive Form Builder
+   * @memberof ForgotPasswordComponent
+   */
   constructor(
     private _emailService: EmailService,
     private _compteService: CompteService,
@@ -37,6 +52,11 @@ export class ForgotPasswordComponent implements OnInit {
     this.user = new User();
   }
 
+  /**
+   * Generate forgotPasswordForm
+   *
+   * @memberof ForgotPasswordComponent
+   */
   createForm() {
     this.forgotPasswordForm = this._fb.group({
       email: [ '', Validators.compose([
@@ -45,7 +65,13 @@ export class ForgotPasswordComponent implements OnInit {
     });
   }
 
-  getUserInfos(email: string) {
+  /**
+   * Get User by Email. Appelé par forgotPassword()
+   *
+   * @param {string} email email
+   * @memberof ForgotPasswordComponent
+   */
+  getUserByEmail(email: string) {
     this._compteService.getUserByEmail(email)
       .subscribe(user => {
         this.user = user.obj;
@@ -53,10 +79,17 @@ export class ForgotPasswordComponent implements OnInit {
       );
   }
 
+  /**
+   * Send forgotPassword mail pour réinitialiser le password.
+   * - Appel fonction getUserByEmail()
+   * - Envoi Email de réinitialisation du password
+   *
+   * @memberof ForgotPasswordComponent
+   */
   forgotPassword() {
     this.processing = true;
     this.adresseEmail = this.email;
-    this.getUserInfos(this.email);
+    this.getUserByEmail(this.email);
 
     setTimeout(() => {
       const mailBody = mailTemplate.forgotPassword(this.user);

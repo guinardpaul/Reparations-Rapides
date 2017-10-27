@@ -1,7 +1,3 @@
-<h2 class="page-header">Créer un compte</h2>
-<div *ngIf="verifEmailUnicite">Un compte avec cet Email existe déjà.
-    <a routerLink="/login" (click)="onLogin()">Se connecter ?</a>
-</div>
 <!-- <form (submit)="onRegister()" [formGroup]="registerForm" class="form-horizontal">
     <div class="form-group">
         <label for="nom">Nom:</label>
@@ -52,90 +48,120 @@
     </div>
     <button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" class="btn btn-success">Sign up</button>
 </form> -->
-<span class="col-sm-4 col-md-4 col-xs-2"></span>
-<mat-card class="register-card col-sm-4 col-md-4 col-xs-8">
-    <mat-card-header>
-        <mat-card-title style="font-size: 40px;">Créer un compte</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <form (submit)="onRegister()" [formGroup]="registerForm" class="register-form">
+<span class="col-sm-3 col-md-3 col-lg-3 col-xs-2"></span>
+
+<mat-card class="col-sm-6 col-md-6 col-lg-6 col-xs-8" style="background-color: rgb(255, 246, 234);">
+    <form (submit)="onRegister()" [formGroup]="registerForm">
+        <mat-card-header>
+            <mat-card-title style="font-size: 40px;">Créer un compte</mat-card-title>
+            <mat-card-subtitle class="email-already-exists" *ngIf="verifEmailUnicite">Un compte avec cet adresse email existe déjà.
+                <a routerLink="/login" (click)="onLogin()">Se connecter ?</a>
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="register-container">
+            <!-- Common data -->
             <table class="container-width">
                 <tr>
                     <td>
-                        <mat-form-field class="input-width">
+                        <mat-form-field class="input">
                             <input matInput type="text" placeholder="Nom" formControlName="nom" autofocus required>
+                            <mat-error class="error" *ngIf="registerForm.controls.nom.errors">{{getErrorMessage('nom')}}</mat-error>
                         </mat-form-field>
                     </td>
                     <td>
-                        <mat-form-field class="input-width">
+                        <mat-form-field class="input">
                             <input matInput type="text" placeholder="Prénom" formControlName="prenom" required>
+                            <mat-error class="error" *ngIf="registerForm.controls.prenom.errors">{{getErrorMessage('prenom')}}</mat-error>
                         </mat-form-field>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <mat-form-field class="input-width">
-                            <input matInput type="email" placeholder="Email" formControlName="email" required>
+                        <mat-form-field class="input">
+                            <input matInput type="email" placeholder="Email" formControlName="email" (blur)="checkEmailUnicite()" required>
+                            <mat-error class="error" *ngIf="registerForm.controls.email.errors">{{getErrorMessage('email')}}</mat-error>
                         </mat-form-field>
                     </td>
                     <td>
-                        <mat-form-field class="input-width">
+                        <mat-form-field class="input">
                             <input matInput type="text" placeholder="Téléphone" formControlName="numTel" required>
+                            <mat-error class="error" *ngIf="registerForm.controls.numTel.errors">{{getErrorMessage('numTel')}}</mat-error>
                         </mat-form-field>
                     </td>
                 </tr>
             </table>
+            <!-- /Common data -->
 
+            <!-- Passwords formGroup -->
             <table class="container-width" formGroupName="passwords">
                 <tr>
                     <td>
-                        <mat-form-field class="input-width">
+                        <mat-form-field class="input">
                             <input matInput type="password" placeholder="Mot de passe" formControlName="password" required>
+                            <mat-error class="error" *ngIf="passwords.controls.password.errors">{{getErrorMessage('password')}}</mat-error>
                         </mat-form-field>
                     </td>
                     <td>
-                        <mat-form-field class="input-width">
+                        <mat-form-field class="input">
                             <input matInput type="password" placeholder="Confirmation" formControlName="confirmPassword" required>
+                            <mat-error class="error" *ngIf="passwords.controls.confirmPassword.errors">{{getErrorMessage('confirmPassword')}}</mat-error>
                         </mat-form-field>
                     </td>
                 </tr>
             </table>
+            <!-- /Passwords formGroup -->
 
+            <!-- Error Passwords Not Match -->
+            <span class="passwords-error" *ngIf="registerForm.controls.passwords.errors && passwords.controls.password.touched && !passwords.controls.confirmPassword.pristine">{{getErrorMessage('passwords')}}</span>
+
+            <!-- Adresse formGroup -->
             <div formGroupName="adresse">
-
                 <mat-form-field class="container-width">
                     <textarea matInput type="text" placeholder="Adresse" formControlName="rue" required></textarea>
+                    <mat-error class="error" *ngIf="adresse.controls.rue.errors">{{getErrorMessage('rue')}}</mat-error>
                 </mat-form-field>
 
                 <table class="container-width">
-
                     <tr>
                         <td>
-                            <mat-form-field class="input-width">
+                            <mat-form-field class="input">
                                 <input matInput type="text" placeholder="Complément adresse" formControlName="complementAdresse" required>
+                                <mat-error class="error" *ngIf="adresse.controls.complementAdresse.errors">{{getErrorMessage('complementAdresse')}}</mat-error>
                             </mat-form-field>
                         </td>
                         <td>
-                            <mat-form-field class="input-width">
+                            <mat-form-field class="input">
                                 <input matInput type="text" placeholder="Ville" formControlName="ville" required>
+                                <mat-error class="error" *ngIf="adresse.controls.ville.errors">{{getErrorMessage('ville')}}</mat-error>
                             </mat-form-field>
                         </td>
                         <td>
-                            <mat-form-field class="input-width">
-                                <input matInput type="text" #postalCode maxlength="5" placeholder="Code postal" formControlName="cp" required>
-                                <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+                            <mat-form-field class="input">
+                                <input matInput type="text" #cp maxlength="5" placeholder="Code postal" formControlName="cp" required>
+                                <mat-hint align="end">{{cp.value.length}} / 5</mat-hint>
+                                <mat-error class="error" *ngIf="adresse.controls.cp.errors">{{getErrorMessage('cp')}}</mat-error>
                             </mat-form-field>
                         </td>
                     </tr>
-
                 </table>
 
             </div>
-        </form>
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" color="primary">S'enregistrer</button>
+            <!-- /Adresse FormGroup -->
 
-    </mat-card-actions>
+        </mat-card-content>
+        <!-- Button -->
+        <mat-card-actions>
+            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-0"></span>
+            <span class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+
+                <button mat-raised-button [disabled]="!registerForm.valid || processing || verifEmailUnicite" type="submit" color="primary">S'enregistrer</button>
+                <a routerLink="/login" class="login-link">Déjà un compte ? Se connecter</a>
+
+            </span>
+            <span class="col-lg-2 col-md-2 col-sm-2 col-xs-0"></span>
+        </mat-card-actions>
+        <!-- /Button -->
+    </form>
 </mat-card>
-<span class="col-sm-4 col-md-4 col-xs-2"></span>
+
+<span class="col-sm-3 col-md-3 col-lg-3 col-xs-2"></span>

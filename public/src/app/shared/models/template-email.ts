@@ -1,6 +1,12 @@
 import { User } from './User';
 
-export function forgotPassword(user: User) {
+/**
+ * Forgot password template
+ *
+ * @param {User} user user object
+ * @returns {string} mail
+ */
+export function forgotPassword(user: User): string {
   const mailMessage = `
   <h3>Bonjour ${user.nom} ${user.prenom}.</h3>
   Cliquez sur le lien suivant pour réinitialiser votre mot de passe : <br/>
@@ -9,7 +15,13 @@ export function forgotPassword(user: User) {
   return mailMessage;
 }
 
-export function validateAccount(user: User) {
+/**
+ * Validate account template
+ *
+ * @param {User} user user object
+ * @returns {string} mail
+ */
+export function validateAccount(user: User): string {
   const mailMessage = `
   <h3>Bonjour ${user.nom} ${user.prenom}.</h3>
   Merci de vous être enregistrer sur #NOM APPLI#. <br/>
