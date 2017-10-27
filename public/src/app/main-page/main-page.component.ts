@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+
+/**
+ * Home page
+ * @author Paul GUINARD
+ * @export MainPageComponent
+ * @class MainPageComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
