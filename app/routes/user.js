@@ -56,11 +56,6 @@ module.exports = (router) => {
 
     router.get('/id/:_id', (req, res, next) => {
         if (!req.params._id) {
-            return res.status(409).json({
-                success: false,
-                message: 'email not provided'
-            });
-        } else if (!req.params._id) {
             res.status(409).json({
                 success: false,
                 message: 'id not provided'
@@ -182,7 +177,7 @@ module.exports = (router) => {
     });
 
     router.get('/profile', (req, res, next) => {
-        User.findById(req.decoded.userId).select('nom prenom email').exec((err, user) => {
+        User.findById(req.decoded.userId).select('nom prenom email numTel adresse').exec((err, user) => {
             if (err) {
                 res.status(500).json({
                     success: false,

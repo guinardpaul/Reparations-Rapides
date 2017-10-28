@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
 const config = require('../config/database');
 const jwt = require('jsonwebtoken');
+const Compte = require('./compte');
 
 // Validate Function to check if valid e-mail format
 let validEmailChecker = (email) => {
@@ -22,26 +23,7 @@ const emailValidators = [{
 }];
 
 // User schema
-// TODO: Ajouter adresse (autocompletion sur l'adresse en fonction de la position GPS de l'utilisateur ?)
 const userSchema = new Schema({
-  nom: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 100
-  },
-  prenom: {
-    type: String,
-    required: true,
-    minlength: 1,
-    maxlength: 100
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-    maxlength: 150
-  },
   email: {
     type: String,
     required: true,
@@ -51,33 +33,21 @@ const userSchema = new Schema({
     minlength: 6,
     maxlength: 100
   },
-  numTel: {
+  password: {
     type: String,
     required: true,
-    minlength: 10,
-    maxlength: 40
-  },
-  adresse: {
-    rue: {
-      type: String,
-      required: true,
-    },
-    complementAdresse: {
-      type: String
-    },
-    cp: {
-      type: String,
-      required: true
-    },
-    ville: {
-      type: String,
-      required: true
-    }
+    minlength: 6,
+    maxlength: 150
   },
   validAccount: {
     type: Boolean,
     required: true,
     default: false
+  },
+  compte: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Compte',
+    required: true
   }
 });
 
@@ -88,7 +58,6 @@ userSchema.pre('save', function (next) {
 
   bcrypt.hash(this.password, null, null, (err, hash) => {
     if (err) return next(err);
-    console.log(this.password);
     this.password = hash;
     next();
   });
@@ -96,12 +65,8 @@ userSchema.pre('save', function (next) {
 
 // Middleware to encrypt password on update User
 userSchema.pre('update', function (next) {
-  /*     if (!this.isModified('password'))
-          return next(); */
-
   bcrypt.hash(this.getUpdate().$set.password, null, null, (err, hash) => {
     if (err) return next(err);
-    console.log(this.getUpdate().$set.password);
     this.update({}, {
       $set: {
         password: hash

@@ -1,6 +1,7 @@
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var User = require('../models/user');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('../models/user');
+const Compte = require('../models/compte');
 
 module.exports = (passport) => {
   passport.serializeUser(function (user, done) {
@@ -40,15 +41,26 @@ module.exports = (passport) => {
         message: 'Le compte n\'est pas activé, Vérifier votre boîte mail'
       });
 
-      // Authentication réussie
-      return done(null, user, {
-        success: true,
-        message: 'Vous êtes connecté',
-        obj: {
-          nom: user.nom,
-          prenom: user.prenom,
-          email: email,
-          numTel: user.numTel
+      Compte.findById(user.compte, (err, compte) => {
+        if (err) return next(err);
+        if (!compte) {
+          return done(null, false, {
+            success: false,
+            message: 'Erreur durant la récupération du compte utilisateur'
+          });
+        } else {
+          // Authentication réussie
+          return done(null, user, {
+            success: true,
+            message: 'Vous êtes connecté',
+            obj: {
+              nom: compte.nom,
+              prenom: compte.prenom,
+              email: email,
+              numTel: compte.numTel,
+              adresse: compte.adresse
+            }
+          });
         }
       });
     });
@@ -75,17 +87,15 @@ module.exports = (passport) => {
             message: 'Cet email est déjà utilisé pour un compte valide'
           });
         } else {
-
-          const newUser = new User({
+          const newCompte = new Compte({
             nom: req.body.nom,
             prenom: req.body.prenom,
-            numTel: req.body.numTel,
             email: email,
-            password: password,
-            adresse: req.body.adresse
+            adresse: req.body.adresse,
+            numTel: req.body.numTel
           });
 
-          newUser.save((err, data) => {
+          newCompte.save((err, compte) => {
             if (err) {
               if (err.code === 11000) {
                 return done(null, false, {
@@ -108,11 +118,6 @@ module.exports = (passport) => {
                     success: false,
                     message: 'Le prenom ne doit pas être vide'
                   });
-                } else if (err.errors.password) {
-                  return done(null, false, {
-                    success: false,
-                    message: 'Le mot de passe doit avoir au moins 6 caractères'
-                  });
                 } else if (err.errors.numTel) {
                   return done(null, false, {
                     success: false,
@@ -125,10 +130,46 @@ module.exports = (passport) => {
                 message: err
               });
             } else {
-              return done(null, newUser, {
-                success: true,
-                message: 'User registered',
-                obj: newUser
+              console.log('Compte saved');
+              console.log(compte);
+
+              const newUser = new User({
+                email: email,
+                password: password,
+                compte: compte._id
+              });
+
+              newUser.save((err, data) => {
+                if (err) {
+                  if (err.code === 11000) {
+                    return done(null, false, {
+                      success: false,
+                      message: 'Email already exists'
+                    });
+                  } else if (err.errors) {
+                    if (err.errors.email) {
+                      return done(null, false, {
+                        success: false,
+                        message: err.errors.email.message
+                      });
+                    } else if (err.errors.password) {
+                      return done(null, false, {
+                        success: false,
+                        message: 'Le mot de passe doit avoir au moins 6 caractères'
+                      });
+                    }
+                  }
+                  return done(null, false, {
+                    success: false,
+                    message: err
+                  });
+                } else {
+                  return done(null, newUser, {
+                    success: true,
+                    message: 'User registered',
+                    obj: newUser
+                  });
+                }
               });
             }
           });

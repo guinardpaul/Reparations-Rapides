@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { tokenNotExpired } from 'angular2-jwt';
 // Models
 import { User } from '../../shared/models/User';
+import { RegisterUserCompte } from '../../shared/models/RegisterUserCompte';
 
 /**
  * Authentication Service
@@ -53,11 +54,11 @@ export class AuthenticationService {
   /**
    * Register User
    *
-   * @param {User} user User Object
+   * @param {RegisterUserCompte} registerData RegisterUserCompte Object
    * @memberof AuthenticationService
    */
-  register(user: User): Observable<any> {
-    return this._http.post(`${this.url}/register`, user);
+  register(registerData: RegisterUserCompte): Observable<any> {
+    return this._http.post(`${this.url}/register`, registerData);
   }
 
   /**

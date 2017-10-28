@@ -10,6 +10,7 @@ import { ValidationService } from '../../services/validation.service';
 // Models
 import { Email } from '../../../shared/models/Email';
 import { User } from '../../../shared/models/User';
+import { RegisterUserCompte } from '../../../shared/models/RegisterUserCompte';
 // Templates
 import * as mailTemplate from '../../../shared/models/template-email';
 
@@ -28,6 +29,7 @@ import * as mailTemplate from '../../../shared/models/template-email';
 export class RegisterComponent implements OnInit {
   private registerForm: FormGroup;
   private user: User;
+  private registerData: RegisterUserCompte;
   private processing: boolean;
   private verifEmailUnicite: boolean;
 
@@ -205,7 +207,7 @@ export class RegisterComponent implements OnInit {
   onRegister() {
     this.processing = true;
     // Set User Object
-    this.user = {
+    this.registerData = {
       nom: this.nom,
       prenom: this.prenom,
       email: this.email,
@@ -220,11 +222,22 @@ export class RegisterComponent implements OnInit {
     };
 
     // Appel function register()
-    this._authService.register(this.user)
+    this._authService.register(this.registerData)
       .subscribe(data => {
         console.log('register...');
         console.log(data);
+        // Get Compte infos
+        this.getCompteInfos(data.obj.compte);
+      }, err => {
+        this.processing = false;
+        console.log(err);
+      });
+  }
 
+  getCompteInfos(compteId: number) {
+    this._compteService.getUserById(compteId)
+      .subscribe(data => {
+        console.log(data);
         // Envoi l'email de validtion
         this.sendEmailValiderCompte(data.obj);
       }, err => {

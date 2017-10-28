@@ -1,4 +1,3 @@
-//const User = require('../models/User');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const config = require('../../app/config/database');
@@ -49,6 +48,11 @@ module.exports = (router, passport) => {
         success: false,
         message: 'Tel not provided'
       });
+    } else if (!req.body.adresse) {
+      res.status(409).json({
+        success: false,
+        message: 'Adresse not provided'
+      });
     } else {
       passport.authenticate('local-register', function (err, user, info) {
         if (err) {
@@ -57,9 +61,9 @@ module.exports = (router, passport) => {
         if (!user) {
           return res.status(409).json(info);
         }
+        // USED ?
         req.login(user, function (err) {
           if (err) {
-            console.log(err);
             return next(err);
           }
           return res.status(200).json(info);
@@ -90,7 +94,6 @@ module.exports = (router, passport) => {
         });
         req.login(user, (err) => {
           if (err) return next(err);
-          console.log(user);
         });
       } else {
         // If user is not found
