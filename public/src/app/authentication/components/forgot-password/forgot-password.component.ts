@@ -72,7 +72,7 @@ export class ForgotPasswordComponent implements OnInit {
    * @memberof ForgotPasswordComponent
    */
   getUserByEmail(email: string) {
-    this._compteService.getUserByEmail(email)
+    this._compteService.getCompteByEmail(email)
       .subscribe(user => {
         this.user = user.obj;
       }, err => console.log(err)

@@ -19,6 +19,7 @@ const port = process.env.PORT || 3000;
 const auth = require('./app/routes/authentication')(router, passport);
 const mailHandler = require('./app/routes/mailHandler')(router);
 const user = require('./app/routes/user')(router);
+const compte = require('./app/routes/compte')(router);
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.uri, { useMongoClient: true }, (err) => {
@@ -63,6 +64,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use('/auth', auth);
 app.use('/mail', mailHandler);
 app.use('/users', user);
+app.use('/compte', compte);
 
 // Get
 app.get('/', (req, res) => {

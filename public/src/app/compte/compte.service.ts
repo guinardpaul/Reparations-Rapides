@@ -3,9 +3,10 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { Observable } from 'rxjs/Observable';
 // Models
 import { User } from '../shared/models/User';
+import { Compte } from '../shared/models/Compte';
 
 /**
- * Compte Utilisateur Service
+ * Gestion Compte Utilisateur Service
  * @author Paul GUINARD
  * @export
  * @class CompteService
@@ -26,7 +27,7 @@ export class CompteService {
   ) {
     this.authToken = '';
     this.authHeaders = new HttpHeaders();
-    this.url = 'http://localhost:3000/users';
+    this.url = 'http://localhost:3000/compte';
   }
 
   /**
@@ -54,27 +55,27 @@ export class CompteService {
   }
 
   /**
-   * Get User by Email
+   * Get Compte by Email
    *
-   * @param {string} email user email
+   * @param {string} email Compte email
    * @memberof CompteService
    */
-  getUserByEmail(email: string): Observable<any> {
+  getCompteByEmail(email: string): Observable<any> {
     return this._http.get(`${this.url}/email/${email}`);
   }
 
   /**
-   * Get User by Id
+   * Get Compte by Id
    *
-   * @param {number} id user id
+   * @param {number} id Compte id
    * @memberof CompteService
    */
-  getUserById(id: number): Observable<any> {
+  getCompteById(id: number): Observable<any> {
     return this._http.get(`${this.url}/id/${id}`);
   }
 
   /**
-   * Get User Profile si token existe et non expiré
+   * Get Compte Profile si token existe et non expiré
    *
    * @memberof CompteService
    */
@@ -83,38 +84,6 @@ export class CompteService {
     if (this.authToken !== undefined) {
       return this._http.get(`${this.url}/profile`, { headers: this.authHeaders });
     }
-  }
-
-  /**
-   * Réinitialise User password
-   *
-   * @param {User} user User Object
-   * @memberof CompteService
-   */
-  initUserPassword(user: User): Observable<any> {
-    console.log(user);
-    return this._http.put(`${this.url}/init-password/${user._id}`, user);
-  }
-
-  /**
-   * Valide le compte utilisateur => update attribut validAccount
-   *
-   * @param {User} user User Object
-   * @memberof CompteService
-   */
-  validateAccount(user: User): Observable<any> {
-    user.validAccount = true;
-    return this._http.put(`${this.url}/validate-account/${user._id}`, user);
-  }
-
-  /**
-   * Vérifie l'unicité de l'email lors de la création de compte
-   *
-   * @param {string} email user email
-   * @memberof CompteService
-   */
-  checkEmailUnicite(email: string): Observable<any> {
-    return this._http.get(`${this.url}/checkEmail/${email}`);
   }
 
 }

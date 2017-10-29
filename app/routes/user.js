@@ -4,6 +4,9 @@ const config = require('../../app/config/database');
 
 module.exports = (router) => {
 
+    /**
+     * Check si Email exist on register
+     */
     router.get('/checkEmail/:email', (req, res, next) => {
         if (!req.params.email) {
             return res.status(409).json({
@@ -20,7 +23,7 @@ module.exports = (router) => {
                         message: 'user not find'
                     });
                 } else {
-                    // EMail enregistré => invalid
+                    // Email enregistré => invalid
                     return res.status(200).json({
                         success: false,
                         message: 'Un compte existe déjà avec cette adresse email.'
@@ -30,6 +33,9 @@ module.exports = (router) => {
         }
     });
 
+    /**
+     * Get Compte by Email
+     */
     router.get('/email/:email', (req, res, next) => {
         if (!req.params.email) {
             return res.status(409).json({
@@ -37,7 +43,7 @@ module.exports = (router) => {
                 message: 'email not provided'
             });
         } else {
-            User.findOne({ email: req.params.email }).select('nom prenom email').exec((err, user) => {
+            User.findOne({ email: req.params.email }).select('nom prenom email adresse numTel').exec((err, user) => {
                 if (err) return next(err);
                 if (!user) {
                     res.status(409).json({
@@ -54,6 +60,9 @@ module.exports = (router) => {
         }
     });
 
+    /**
+     * Get Compte by Id
+     */
     router.get('/id/:_id', (req, res, next) => {
         if (!req.params._id) {
             res.status(409).json({
@@ -61,7 +70,7 @@ module.exports = (router) => {
                 message: 'id not provided'
             });
         } else {
-            User.findOne({ _id: req.params._id }).select('nom prenom email validAccount').exec((err, user) => {
+            User.findOne({ _id: req.params._id }).select('nom prenom email adresse numTel').exec((err, user) => {
                 if (err) return next(err);
                 if (!user) {
                     res.status(409).json({
@@ -78,6 +87,9 @@ module.exports = (router) => {
         }
     });
 
+    /**
+     * Réinitialise password
+     */
     router.put('/init-password/:_id', (req, res, next) => {
         if (!req.body.password) {
             res.status(409).json({
@@ -119,6 +131,9 @@ module.exports = (router) => {
         }
     });
 
+    /**
+     * Validate account
+     */
     router.put('/validate-account/:_id', (req, res, next) => {
         if (!req.body) {
             res.status(409).json({
@@ -152,49 +167,6 @@ module.exports = (router) => {
                 }
             });
         }
-    });
-
-    router.use((req, res, next) => {
-        const token = req.headers['authorization'];
-        if (!token) {
-            res.status(401).json({
-                success: false,
-                message: 'token not provided'
-            });
-        } else {
-            jwt.verify(token, config.secret, (err, decoded) => {
-                if (err) {
-                    res.status(401).json({
-                        success: false,
-                        message: 'token invalid'
-                    });
-                } else {
-                    req.decoded = decoded;
-                    next();
-                }
-            });
-        }
-    });
-
-    router.get('/profile', (req, res, next) => {
-        User.findById(req.decoded.userId).select('nom prenom email numTel adresse').exec((err, user) => {
-            if (err) {
-                res.status(500).json({
-                    success: false,
-                    message: err
-                });
-            } else if (!user) {
-                res.status(400).json({
-                    success: false,
-                    message: 'User not find'
-                });
-            } else {
-                res.status(200).json({
-                    success: true,
-                    obj: user
-                });
-            }
-        })
     });
 
 

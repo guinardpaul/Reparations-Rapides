@@ -7,6 +7,7 @@ import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 import { EmailService } from '../../../shared/services/email.service';
 import { CompteService } from '../../../compte/compte.service';
 import { ValidationService } from '../../services/validation.service';
+import { UserService } from '../../services/user.service';
 // Models
 import { Email } from '../../../shared/models/Email';
 import { User } from '../../../shared/models/User';
@@ -53,6 +54,7 @@ export class RegisterComponent implements OnInit {
    * @param {EmailService} _emailService Email
    * @param {FlashMsgService} _flashMsg Flash Msg
    * @param {CompteService} _compteService Compte utilisateur
+   * @param {UserService} _userService User service
    * @param {ValidationService} _validationService Validation Form Function
    * @param {Router} _router router
    * @memberof RegisterComponent
@@ -63,6 +65,7 @@ export class RegisterComponent implements OnInit {
     private _emailService: EmailService,
     private _flashMsg: FlashMsgService,
     private _compteService: CompteService,
+    private _userService: UserService,
     private _validationService: ValidationService,
     private _router: Router
   ) {
@@ -235,7 +238,7 @@ export class RegisterComponent implements OnInit {
   }
 
   getCompteInfos(compteId: number) {
-    this._compteService.getUserById(compteId)
+    this._compteService.getCompteById(compteId)
       .subscribe(data => {
         console.log(data);
         // Envoi l'email de validtion
@@ -295,7 +298,7 @@ export class RegisterComponent implements OnInit {
     this.verifEmailUnicite = false;
 
     if (this.email !== '') {
-      this._compteService.checkEmailUnicite(this.email)
+      this._userService.checkEmailUnicite(this.email)
         .subscribe(data => {
           // Si data.success => Compte utilisateur existe déjà
           if (!data.success) {

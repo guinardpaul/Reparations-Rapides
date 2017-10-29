@@ -7,6 +7,7 @@ import { User } from '../../../shared/models/User';
 import { CompteService } from '../../../compte/compte.service';
 import { FlashMsgService } from '../../../shared/services/flash-msg.service';
 import { ValidationService } from '../../services/validation.service';
+import { UserService } from '../../services/user.service';
 
 /**
  * Réinitialise password Compte Utilisateur
@@ -44,6 +45,7 @@ export class InitPasswordComponent implements OnInit {
    */
   constructor(
     private _compteService: CompteService,
+    private _userService: UserService,
     private _validationService: ValidationService,
     private _flashMsg: FlashMsgService,
     private _fb: FormBuilder,
@@ -94,7 +96,7 @@ export class InitPasswordComponent implements OnInit {
     user.password = this.password;
     console.log(user);
 
-    this._compteService.initUserPassword(user)
+    this._userService.initUserPassword(user)
       .subscribe(data => {
         if (data.success) {
           this._flashMsg.displayMsg('Mot de passe mis à jour. Vous pouvez vous connecter avec votre nouveau password.',
@@ -118,8 +120,8 @@ export class InitPasswordComponent implements OnInit {
    * @param {number} id user id
    * @memberof InitPasswordComponent
    */
-  getUserById(id: number) {
-    this._compteService.getUserById(id)
+  getCompteById(id: number) {
+    this._compteService.getCompteById(id)
       .subscribe(user => {
         this.user = user.obj;
         this.userEmail = user.obj.email;
@@ -140,7 +142,7 @@ export class InitPasswordComponent implements OnInit {
     if (this._activatedRoute.snapshot.params[ '_id' ] !== undefined) {
       this.userId = this._activatedRoute.snapshot.params[ '_id' ];
       // Get User data
-      this.getUserById(this.userId);
+      this.getCompteById(this.userId);
     } else {
       this._flashMsg.displayMsg('Ce lien a expiré. Entrez votre adresse E-mail pour recevoir un lien valide.', 'alert-danger', 5000);
       this._router.navigate([ '/forgot-password' ]);

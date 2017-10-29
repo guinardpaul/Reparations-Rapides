@@ -5,6 +5,7 @@ import { User } from '../../../shared/models/User';
 // Services
 import { CompteService } from '../../../compte/compte.service';
 import { FlashMsgService } from '../../../shared/services/flash-msg.service';
+import { UserService } from '../../services/user.service';
 
 /**
  * Validation compte utilisateur
@@ -24,6 +25,7 @@ export class ValidateAccountComponent implements OnInit {
   /**
    * Creates an instance of ValidateAccountComponent.
    * @param {CompteService} _compteService Compte Utilisateur
+   * @param {UserService} _userService Compte auth service
    * @param {ActivatedRoute} _activatedRoute get router params
    * @param {Router} _router router
    * @param {FlashMsgService} _flashMsg Flash Msg
@@ -31,6 +33,7 @@ export class ValidateAccountComponent implements OnInit {
    */
   constructor(
     private _compteService: CompteService,
+    private _userService: UserService,
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _flashMsg: FlashMsgService
@@ -43,8 +46,8 @@ export class ValidateAccountComponent implements OnInit {
    * @param {number} id user id
    * @memberof ValidateAccountComponent
    */
-  getUserById(id: number) {
-    this._compteService.getUserById(id)
+  getCompteById(id: number) {
+    this._compteService.getCompteById(id)
       .subscribe(data => {
         console.log(data);
         if (data.success) {
@@ -64,7 +67,7 @@ export class ValidateAccountComponent implements OnInit {
    * @memberof ValidateAccountComponent
    */
   ValidateAccount(user: User) {
-    this._compteService.validateAccount(user)
+    this._userService.validateAccount(user)
       .subscribe(data => {
         console.log(data);
         if (data.success) {
@@ -87,7 +90,7 @@ export class ValidateAccountComponent implements OnInit {
     if (this._activatedRoute.snapshot.params[ '_id' ] !== undefined) {
       this.idUser = this._activatedRoute.snapshot.params[ '_id' ];
       // Get User data
-      this.getUserById(this.idUser);
+      this.getCompteById(this.idUser);
     } else {
       this._flashMsg.displayMsg('Lien invalide', 'alert-danger', 3000);
       this._router.navigate([ '/' ]);
